@@ -1,0 +1,212 @@
+{{ 'section-athletes-slider.css' | asset_url | stylesheet_tag }}
+
+<div class="athletes-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="athletes-container">
+    {% if section.settings.title != blank %}
+      <h2 class="athletes-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    
+    {% if section.settings.description != blank %}
+      <p class="athletes-description">{{ section.settings.description }}</p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="athletes-slider-wrapper">
+        <button class="slider-arrow slider-arrow-left" aria-label="Previous">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="athletes-slider">
+          <div class="athletes-track">
+            {% for block in section.blocks %}
+              <div class="athlete-card" {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}
+                  <div class="athlete-image-wrapper">
+                    <img 
+                      src="{{ block.settings.image | image_url: width: 600 }}"
+                      alt="{{ block.settings.name }}"
+                      class="athlete-image"
+                      loading="lazy"
+                      width="600"
+                      height="800"
+                    >
+                  </div>
+                {% else %}
+                  <div class="athlete-image-placeholder">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                      <rect width="80" height="80" fill="#f3f3f3"/>
+                      <path d="M40 40L50 30M40 40L30 30M40 40V60" stroke="#ccc" stroke-width="2"/>
+                    </svg>
+                  </div>
+                {% endif %}
+                
+                {% if block.settings.name != blank %}
+                  <p class="athlete-name">{{ block.settings.name }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <button class="slider-arrow slider-arrow-right" aria-label="Next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+
+    {% if section.settings.button_text != blank %}
+      <div class="athletes-button-wrapper">
+        <a href="{{ section.settings.button_link }}" class="athletes-button">
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sliders = document.querySelectorAll('.athletes-slider-wrapper');
+    
+    sliders.forEach(sliderWrapper => {
+      const track = sliderWrapper.querySelector('.athletes-track');
+      const leftArrow = sliderWrapper.querySelector('.slider-arrow-left');
+      const rightArrow = sliderWrapper.querySelector('.slider-arrow-right');
+      const cards = sliderWrapper.querySelectorAll('.athlete-card');
+      
+      if (cards.length === 0) return;
+      
+      let currentIndex = 0;
+      const cardsToShow = window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : window.innerWidth >= 480 ? 2 : 1;
+      const maxIndex = Math.max(0, cards.length - cardsToShow);
+      
+      function updateSlider() {
+        const cardWidth = cards[0].offsetWidth;
+        const gap = 20;
+        const offset = currentIndex * (cardWidth + gap);
+        track.style.transform = `translateX(-${offset}px)`;
+        
+        leftArrow.style.opacity = currentIndex === 0 ? '0.3' : '1';
+        leftArrow.style.cursor = currentIndex === 0 ? 'default' : 'pointer';
+        rightArrow.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
+        rightArrow.style.cursor = currentIndex >= maxIndex ? 'default' : 'pointer';
+      }
+      
+      leftArrow.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateSlider();
+        }
+      });
+      
+      rightArrow.addEventListener('click', () => {
+        if (currentIndex < maxIndex) {
+          currentIndex++;
+          updateSlider();
+        }
+      });
+      
+      window.addEventListener('resize', () => {
+        currentIndex = 0;
+        updateSlider();
+      });
+      
+      updateSlider();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Athletes Slider",
+  "tag": "section",
+  "class": "section-athletes-slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Backed by Athletes. Built for You."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "At U Perform, we believe in the power of people pushing their limits. Our athletes and ambassadors train, compete, and recover with U Perform, trusting us to help them stay stronger, perform longer, and go the distance."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Team U Perform"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "athlete",
+      "name": "Athlete",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Athlete Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Athlete Name",
+          "default": "Athlete Name"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Athletes Slider",
+      "blocks": [
+        {
+          "type": "athlete"
+        },
+        {
+          "type": "athlete"
+        },
+        {
+          "type": "athlete"
+        },
+        {
+          "type": "athlete"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

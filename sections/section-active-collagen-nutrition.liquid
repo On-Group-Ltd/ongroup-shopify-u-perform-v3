@@ -1,0 +1,194 @@
+{{ 'section-nutrition-info.css' | asset_url | stylesheet_tag }}
+
+<div class="nutrition-info-section" style="background-color: {{ section.settings.background_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="nutrition-container">
+    {% if section.settings.title != blank %}
+      <h2 class="nutrition-title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="nutrition-stats">
+      {% if section.settings.stat_1_image != blank %}
+        <div class="nutrition-stat">
+          <img src="{{ section.settings.stat_1_image | image_url: width: 800 }}" alt="Nutrition Stat 1" class="stat-image">
+        </div>
+      {% endif %}
+
+      {% if section.settings.stat_2_image != blank %}
+        <div class="nutrition-stat">
+          <img src="{{ section.settings.stat_2_image | image_url: width: 800 }}" alt="Nutrition Stat 2" class="stat-image">
+        </div>
+      {% endif %}
+
+      {% if section.settings.stat_3_image != blank %}
+        <div class="nutrition-stat">
+          <img src="{{ section.settings.stat_3_image | image_url: width: 800 }}" alt="Nutrition Stat 3" class="stat-image">
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.settings.description != blank %}
+      <div class="nutrition-description">{{ section.settings.description }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.nutrition-info-section {
+  width: 100%;
+}
+
+.nutrition-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.nutrition-title {
+  font-size: clamp(2rem, 5vw, 6rem);
+  font-weight: 400;
+  margin-bottom: 60px;
+  color: {{ section.settings.title_color }};
+  font-family: "georgiapro", sans-serif;
+}
+
+.nutrition-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(40px, 8vw, 120px);
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.nutrition-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 1 220px;
+}
+
+.stat-image {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  object-fit: contain;
+}
+
+.nutrition-description {
+  font-size: clamp(0.875rem, 1.5vw, 3rem);
+  color: {{ section.settings.description_color }};
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .nutrition-stats {
+    justify-content: center;
+    gap: 40px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Nutrition Info",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Active Collagen."
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Stat 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "stat_1_image",
+      "label": "Stat 1 Image"
+    },
+    {
+      "type": "header",
+      "content": "Stat 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "stat_2_image",
+      "label": "Stat 2 Image"
+    },
+    {
+      "type": "header",
+      "content": "Stat 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "stat_3_image",
+      "label": "Stat 3 Image"
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Bottom Description",
+      "default": "<p>Per 30ml Sachet</p>"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Nutrition Info"
+    }
+  ]
+}
+{% endschema %}

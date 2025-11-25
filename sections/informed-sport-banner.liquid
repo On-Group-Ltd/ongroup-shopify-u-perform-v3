@@ -1,0 +1,127 @@
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      position: relative;
+      padding: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px 0 {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+    {%- if section.settings.image_mobile != blank -%}
+      @media screen and (max-width: 749px) {
+        #Banner-{{ section.id }}::before,
+        #Banner-{{ section.id }} .banner__media::before {
+          padding-bottom: {{ 1 | divided_by: section.settings.image_mobile.aspect_ratio | times: 100 }}%;
+          content: '';
+          display: block;
+        }
+      }
+    {%- endif -%}
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+
+      #Banner-{{ section.id }}::before,
+      #Banner-{{ section.id }} .banner__media::before {
+        padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;
+        content: '';
+        display: block;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="section-{{ section.id }}-padding">
+    {%- liquid
+      assign sizes = "100vw"
+      assign image_height = section.settings.image.width | divided_by: section.settings.image.aspect_ratio
+
+      assign image_mobile = section.settings.image_mobile
+      if image_mobile != blank
+        assign image_class = "small-hide"
+        assign image_class_mobile = "medium-hide large-up-hide"
+        assign image_mobile_height = image_mobile.width | divided_by: image_mobile.aspect_ratio
+      endif
+    -%}
+    <div id="Banner-{{ section.id }}" class="media media--transparent">
+      {%- if section.settings.button_link != blank -%}
+        <a href="{{ section.settings.button_link }}" class="full-width-link">
+          <span class="visually-hidden">Informed Sport Certified</span>
+        </a>
+      {%- endif -%}
+      {%- if image_mobile != blank -%}
+        {{ image_mobile | image_url: width: 750 | image_tag:
+          loading: 'lazy',
+          width: image_mobile.width,
+          height: image_mobile_height,
+          class: image_class_mobile,
+          sizes: sizes,
+          widths: '375, 550, 750',
+          alt: image_mobile.alt | escape
+        }}
+      {%- endif -%}
+
+      {{ section.settings.image | image_url: width: 2000 | image_tag:
+        loading: 'lazy',
+        width: section.settings.image.width,
+        height: image_height,
+        class: image_class,
+        sizes: sizes,
+        widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+        alt: section.settings.image.alt | escape
+      }}
+    </div>
+  </div>
+
+{% schema %}
+{
+  "name": "Informed Sport Banner",
+  "tag": "section",
+  "class": "section section--informed-sport-banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image in mobile",
+      "info": "optional"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Informed Sport Banner"
+    }
+  ]
+}
+{% endschema %}

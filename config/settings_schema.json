@@ -1451,5 +1451,162 @@
         "default": "scheme-1"
       }
     ]
+  },
+    {
+    "name": "As Seen In Logos",
+    "settings": [
+      {
+        "type": "text",
+        "id": "asi_title",
+        "default": "As Seen In",
+        "label": "Title"
+      },
+      {
+        "type": "color",
+        "id": "color_asi_title",
+        "label": "Title color ",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "color_asi_background",
+        "label": "Section background color ",
+        "default": "#000"
+      },
+      {
+        "type": "checkbox",
+        "id": "section_asi_with_border",
+        "default": true,
+        "label": "Add border"
+      },
+      {
+        "type": "header",
+        "content": "Logo 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_1",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_1",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_2",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_2",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_3",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_3",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 4"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_4",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_4",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 5"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_5",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_5",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 6"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_6",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_6",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 7"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_7",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_7",
+        "label": "Link",
+        "info": "optional"
+      },
+      {
+        "type": "header",
+        "content": "Logo 8"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_8",
+        "label": "Image",
+        "info": "Add retina ready logo (2x its original size)"
+      },
+      {
+        "type": "url",
+        "id": "image_link_8",
+        "label": "Link",
+        "info": "optional"
+      }
+    ]
   }
 ]

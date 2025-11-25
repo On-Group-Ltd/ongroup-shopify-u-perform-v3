@@ -1,0 +1,115 @@
+{{ 'section-as-seen-in.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+    #shopify-section-{{ section.id }} {
+        background-color:  {{ settings.color_asi_background }};
+    }
+
+    #shopify-section-{{ section.id }} * {
+        background-color:  {{ settings.color_asi_background }};
+    }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width section-{{ section.id }}-padding {% unless section.settings.enable_desktop %}large-up-hide medium-hide{% endunless %} {% unless section.settings.enable_mobile %}small-hide{% endunless %}">
+    <div class="as-seen-in-logos__wrapper {% if settings.section_asi_with_border %}bordered{% endif %}" style="--color-background: {{ settings.color_asi_background }};">
+    {%- if settings.asi_title != blank -%}
+        <h2 class="as-seen-in-logos__heading" style="--color-heading: {{  settings.color_asi_title }}">{{  settings.asi_title }}</h2>
+        {%- endif -%}
+        <div class="as-seen-in-logos">
+        {%- for i in (1..8) -%}
+            {%- capture image_key -%}image_{{ i }}{%- endcapture -%}
+            {%- capture link_key -%}image_link_{{ i }}{%- endcapture -%}
+            {%- liquid
+            assign logo = settings[image_key]
+            assign logo_link = settings[link_key]
+            -%}
+            {%-  if logo != blank -%}
+            <div class="item">
+                {%- liquid 
+                assign logo_width = logo.width | divided_by: 2 | ceil
+                assign logo_height = logo_width | divided_by: logo.aspect_ratio 
+                -%}
+                {%- if logo_link != blank -%}
+                <a href="{{ logo_link }}" target="_blank">
+                {%- endif -%}
+                <img srcset="{{ logo | image_url: width: logo_width }} 1x, {{ logo | image_url: width: logo.width }} 2x"
+                    src="{{ logo | image_url: width: logo_width }}"
+                    width="{{ logo_width }}"
+                    height="{{ logo_height }}"
+                    alt="{{ logo.alt }}"
+                >
+                {%- if logo_link != blank -%}
+                </a>
+                {%- endif -%}
+            </div>
+            {%- endif -%}
+        {%- endfor -%}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "As seen in",
+  "class": "section section--as-seen-in",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Content is managed in Theme settings under 'As Seen In Logos' "
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_desktop",
+      "default": false,
+      "label": "Display on desktop"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile",
+      "default": true,
+      "label": "Display on mobile"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "As seen in"
+    }
+  ]
+}
+{% endschema %}

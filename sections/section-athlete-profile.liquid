@@ -1,0 +1,96 @@
+{{ 'section-athlete-profile.css' | asset_url | stylesheet_tag }}
+
+<div class="profile-section" style="background-color: {{ section.settings.background_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="profile-container page-width">
+    {% if section.settings.title != blank %}
+      <h2 class="profile-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    <div class="profile-content">
+      {% if section.settings.profile_image != blank %}
+        <div class="profile-image">
+          <img
+            src="{{ section.settings.profile_image | image_url: width: 600 }}"
+            alt="{{ section.settings.profile_image.alt | escape }}"
+            loading="lazy"
+            width="{{ section.settings.profile_image.width }}"
+            height="{{ section.settings.profile_image.height }}"
+          >
+        </div>
+      {% endif %}
+      
+      <div class="profile-text">
+        {% if section.settings.description != blank %}
+          <div class="profile-description">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Athlete Profile",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "profile_image",
+      "label": "Profile Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Professor Greg Whyte OBE."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Athlete Profile"
+    }
+  ]
+}
+{% endschema %}
