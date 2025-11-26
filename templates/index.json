@@ -91,6 +91,16 @@
         "color_scheme": "scheme-1",
         "full_width": true,
         "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "informed_sport_banner_YHEpet": {
+      "type": "informed-sport-banner",
+      "name": "Informed Sport Banner",
+      "settings": {
+        "image": "shopify://shop_images/Informed-sports-banner.jpg",
+        "button_link": "",
+        "padding_top": 0,
         "padding_bottom": 0
       }
     },
@@ -227,26 +237,16 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
-    },
-    "informed_sport_banner_YHEpet": {
-      "type": "informed-sport-banner",
-      "name": "Informed Sport Banner",
-      "settings": {
-        "image": "shopify://shop_images/Informed-sports-banner.jpg",
-        "button_link": "",
-        "padding_top": 0,
-        "padding_bottom": 0
-      }
     }
   },
   "order": [
     "image_banner",
     "section_as_seen_in_aqPgi3",
     "rich_text",
+    "informed_sport_banner_YHEpet",
     "featured_collection",
     "collage",
     "video",
-    "multicolumn",
-    "informed_sport_banner_YHEpet"
+    "multicolumn"
   ]
 }
