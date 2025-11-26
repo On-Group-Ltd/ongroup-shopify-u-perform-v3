@@ -47,6 +47,9 @@
     },
     "section_as_seen_in_aqPgi3": {
       "type": "section-as-seen-in",
+      "custom_css": [
+        ".page-width {max-width: 100%;}"
+      ],
       "name": "As seen in",
       "settings": {
         "enable_desktop": true,
