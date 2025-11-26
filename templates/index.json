@@ -28,7 +28,8 @@
         "button"
       ],
       "custom_css": [
-        ".banner--desktop-transparent .button--secondary {color: #857550; font-weight: bold; font-size: 2.5rem; background: #000;}"
+        ".banner--desktop-transparent .button--secondary {color: #857550; font-weight: bold; font-size: 2.5rem; background: #000;}",
+        ".button--secondary:after {all: unset !important;}"
       ],
       "settings": {
         "image": "shopify://shop_images/u-perfrom-banner-v3.jpg",
