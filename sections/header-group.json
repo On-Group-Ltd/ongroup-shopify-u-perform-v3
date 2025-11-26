@@ -37,6 +37,10 @@
     },
     "header": {
       "type": "header",
+      "custom_css": [
+        ".header__menu-item span {font-size: 2rem; font-weight: 600;}",
+        ".header__menu-item:hover span {text-decoration: none;}"
+      ],
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "left",
