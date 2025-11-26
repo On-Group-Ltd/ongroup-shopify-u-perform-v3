@@ -121,6 +121,7 @@
     "show_vendor": false,
     "show_cart_note": false,
     "cart_drawer_collection": "",
+    "section_asi_with_border": false,
     "image_1": "shopify://shop_images/mensHealth2x-U2.webp",
     "image_2": "shopify://shop_images/womensHealth2x-U2.avif",
     "image_3": "shopify://shop_images/runnersWorld2x-U2.avif",
