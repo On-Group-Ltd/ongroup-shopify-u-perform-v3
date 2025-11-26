@@ -121,6 +121,10 @@
     "show_vendor": false,
     "show_cart_note": false,
     "cart_drawer_collection": "",
+    "image_1": "shopify://shop_images/mensHealth2x-U2.webp",
+    "image_2": "shopify://shop_images/womensHealth2x-U2.avif",
+    "image_3": "shopify://shop_images/runnersWorld2x-U2.avif",
+    "image_4": "shopify://shop_images/220Triathalon2x-U2.avif",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
