@@ -65,7 +65,7 @@
           "type": "heading",
           "settings": {
             "heading": "Train Harder. Recover Faster.",
-            "heading_size": "hxl"
+            "heading_size": "hxxl"
           }
         },
         "text": {
@@ -78,6 +78,9 @@
       "block_order": [
         "heading",
         "text"
+      ],
+      "custom_css": [
+        ".rich-text__blocks {max-width: 100%;}"
       ],
       "settings": {
         "desktop_content_position": "center",
