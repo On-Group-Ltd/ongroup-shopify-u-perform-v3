@@ -81,7 +81,8 @@
       ],
       "custom_css": [
         ".rich-text__blocks {max-width: 100%;}",
-        "h2.rich-text__heading {font-family: \"georgiapro\", sans-serif;}"
+        "h2.rich-text__heading {font-family: \"georgiapro\", sans-serif;}",
+        "h2.rich-text__heading span {color: #857550;}"
       ],
       "settings": {
         "desktop_content_position": "center",
