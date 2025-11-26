@@ -39,7 +39,8 @@
       "type": "header",
       "custom_css": [
         ".header__menu-item span {font-size: 2rem; font-weight: 600;}",
-        ".header__menu-item:hover span {text-decoration: none;}"
+        ".header__menu-item:hover span {text-decoration: none;}",
+        ".header--middle-left .header__inline-menu {margin-left: 25px;}"
       ],
       "settings": {
         "logo_position": "middle-left",
