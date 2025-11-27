@@ -160,35 +160,6 @@
         "padding_bottom": 60
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
-      "disabled": true,
-      "settings": {
-        "collection": "all",
-        "products_to_show": 8,
-        "title": "Featured products",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 4,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": false,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-1",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "none",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 28,
-        "padding_bottom": 36
-      }
-    },
     "section_active_collagen_nutrition_R63wJB": {
       "type": "section-active-collagen-nutrition",
       "name": "Nutrition Info",
@@ -226,6 +197,34 @@
         "padding_top": 80,
         "padding_bottom": 80
       }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "collagen-collection",
+        "products_to_show": 3,
+        "title": "Shop Best Sellers.",
+        "heading_size": "hxxl",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 3,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-2",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 28,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
@@ -234,9 +233,9 @@
     "rich_text",
     "informed_sport_banner_YHEpet",
     "section_athletes_slider_bpy79a",
-    "featured_collection",
     "section_active_collagen_nutrition_R63wJB",
     "informed_sport_banner_RMKNLW",
-    "section_athlete_profile_y8V4id"
+    "section_athlete_profile_y8V4id",
+    "featured_collection"
   ]
 }
