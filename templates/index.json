@@ -104,6 +104,62 @@
         "padding_bottom": 0
       }
     },
+    "section_athletes_slider_bpy79a": {
+      "type": "section-athletes-slider",
+      "blocks": {
+        "athlete_DhEUgn": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
+            "name": "Athlete Name"
+          }
+        },
+        "athlete_zk4LzX": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
+            "name": "Athlete Name"
+          }
+        },
+        "athlete_RR7btx": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
+            "name": "Athlete Name"
+          }
+        },
+        "athlete_Lapew6": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
+            "name": "Athlete Name"
+          }
+        },
+        "athlete_CYXgRq": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
+            "name": "Athlete Name"
+          }
+        }
+      },
+      "block_order": [
+        "athlete_DhEUgn",
+        "athlete_zk4LzX",
+        "athlete_RR7btx",
+        "athlete_Lapew6",
+        "athlete_CYXgRq"
+      ],
+      "name": "Athletes Slider",
+      "settings": {
+        "title": "Backed by Athletes. Built for You.",
+        "description": "At U Perform, we believe in the power of people pushing their limits. Our athletes and ambassadors train, compete, and recover with U Perform, trusting us to help them stay stronger, perform longer, and go the distance.",
+        "button_text": "Team U Perform",
+        "button_link": "",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -244,6 +300,7 @@
     "section_as_seen_in_aqPgi3",
     "rich_text",
     "informed_sport_banner_YHEpet",
+    "section_athletes_slider_bpy79a",
     "featured_collection",
     "collage",
     "video",
