@@ -204,6 +204,16 @@
         "padding_top": 80,
         "padding_bottom": 80
       }
+    },
+    "informed_sport_banner_RMKNLW": {
+      "type": "informed-sport-banner",
+      "name": "Informed Sport Banner",
+      "settings": {
+        "image": "shopify://shop_images/Active-collagen-image.jpg",
+        "button_link": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
     }
   },
   "order": [
@@ -213,6 +223,7 @@
     "informed_sport_banner_YHEpet",
     "section_athletes_slider_bpy79a",
     "featured_collection",
-    "section_active_collagen_nutrition_R63wJB"
+    "section_active_collagen_nutrition_R63wJB",
+    "informed_sport_banner_RMKNLW"
   ]
 }
