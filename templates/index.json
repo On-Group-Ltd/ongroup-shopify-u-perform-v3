@@ -194,15 +194,15 @@
       "name": "Nutrition Info",
       "settings": {
         "title": "Active Collagen.",
-        "title_color": "#FFFFFF",
-        "stat_1_image": "shopify://shop_images/64_5754d1a2-2097-4a84-8765-5326ec18f7b5.png",
-        "stat_2_image": "shopify://shop_images/8.5.png",
-        "stat_3_image": "shopify://shop_images/0.4.png",
+        "title_color": "#ffffff",
+        "stat_1_image": "shopify://shop_images/64-calories_b1d0f473-854e-48d4-8f9f-b432d4130c03.png",
+        "stat_2_image": "shopify://shop_images/8.5-grams-of-protein.png",
+        "stat_3_image": "shopify://shop_images/0.4-fat.png",
         "description": "<p>Per 30ml Sachet</p>",
-        "description_color": "#FFFFFF",
+        "description_color": "#ffffff",
         "background_color": "#000000",
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 20,
+        "padding_bottom": 40
       }
     },
     "informed_sport_banner_RMKNLW": {
