@@ -193,7 +193,7 @@
       "type": "section-active-collagen-nutrition",
       "name": "Nutrition Info",
       "settings": {
-        "title": "Active Collagen.",
+        "title": "Active Collagen<span>.</span>",
         "title_color": "#ffffff",
         "stat_1_image": "shopify://shop_images/64-calories_b1d0f473-854e-48d4-8f9f-b432d4130c03.png",
         "stat_2_image": "shopify://shop_images/8.5-grams-of-protein.png",
