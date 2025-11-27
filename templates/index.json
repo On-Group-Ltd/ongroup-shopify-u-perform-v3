@@ -232,24 +232,24 @@
         "reviews_io_reviewsio_card_carousel_gfgVzX": {
           "type": "shopify://apps/reviews-io/blocks/reviewsio-card-carousel/92a082e5-b297-4e88-b428-ac96cbc505f9",
           "settings": {
-            "star": "#000",
+            "star": "#000000",
             "review_type": "company, product",
             "reviews_shown": 20,
-            "header_bg_colour": "#000",
-            "header_colour": "#fff",
-            "header_star_colour": "#fff",
-            "heading_text_colour": "#0E1311",
+            "header_bg_colour": "#000000",
+            "header_colour": "#ffffff",
+            "header_star_colour": "#ffffff",
+            "heading_text_colour": "#0e1311",
             "heading_font": "sans_serif_n4",
-            "body_text_colour": "#0E1311",
-            "badge_icon_colour": "#0E1311",
-            "badge_text_colour": "#0E1311",
+            "body_text_colour": "#0e1311",
+            "badge_icon_colour": "#0e1311",
+            "badge_text_colour": "#0e1311",
             "bg_start_colour": "#ffffff",
             "bg_end_colour": "#ffffff",
             "item_border_width": "0px",
-            "item_border_colour": "#F2F2F2",
+            "item_border_colour": "#f2f2f2",
             "item_border_radius": "0px",
             "item_shadow_size": "10px",
-            "item_shadow_colour": "#F2F2F2",
+            "item_shadow_colour": "#f2f2f2",
             "enable_rich_snippets": false,
             "disable_same_customer": false,
             "logo_colour": "var(--logo-inverted)"
@@ -261,6 +261,32 @@
       ],
       "settings": {
         "include_margins": true
+      }
+    },
+    "latest_blog_Aggr36": {
+      "type": "latest-blog",
+      "name": "Latest Blog Posts",
+      "settings": {
+        "blog": "news",
+        "heading": "U Perform Blog.",
+        "heading_size": "h2",
+        "heading_font": "playfair_display_n4",
+        "heading_color": "#1a1a1a",
+        "subtitle": "Recovery, Nutrition 7 Fitness Advice from Athletes",
+        "subtitle_color": "#b8956b",
+        "show_image": true,
+        "show_date": false,
+        "date_format": "%B %d, %Y",
+        "show_author": false,
+        "show_excerpt": true,
+        "show_read_more": false,
+        "read_more_text": "Read more",
+        "article_title_color": "#1a1a1a",
+        "excerpt_color": "#666666",
+        "show_view_all": false,
+        "view_all_text": "View all articles",
+        "padding_top": 40,
+        "padding_bottom": 52
       }
     }
   },
@@ -274,6 +300,7 @@
     "informed_sport_banner_RMKNLW",
     "section_athlete_profile_y8V4id",
     "featured_collection",
-    "1764238953a12a491e"
+    "1764238953a12a491e",
+    "latest_blog_Aggr36"
   ]
 }
