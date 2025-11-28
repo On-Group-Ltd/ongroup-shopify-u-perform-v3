@@ -55,6 +55,12 @@
       {%- if blog.articles_count > 0 -%}
         <div class="latest-blog__grid">
           {%- for article in blog.articles limit: 3 -%}
+            <h3 class="latest-blog__article-title">
+              <a href="{{ article.url }}">
+                {{ article.title | truncate: 50 }}
+              </a>
+            </h3>
+
             <article class="latest-blog__article">
               {%- if section.settings.show_image -%}
                 <a href="{{ article.url }}" class="latest-blog__image-wrapper">
@@ -74,11 +80,6 @@
               {%- endif -%}
 
               <div class="latest-blog__content">
-                <h3 class="latest-blog__article-title">
-                  <a href="{{ article.url }}">
-                    {{ article.title | truncate: 50 }}
-                  </a>
-                </h3>
 
                 {%- if section.settings.show_date -%}
                   <time class="latest-blog__date" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
