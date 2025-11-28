@@ -23,8 +23,9 @@
 }
 
 .latest-blog__subtitle {
-  font-size: 1.1rem;
-  font-style: italic;
+  color: #857550;
+  font-size: 3rem;
+  font-weight: bold;
   margin: 0;
   letter-spacing: 0.5px;
 }
