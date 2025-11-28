@@ -268,7 +268,7 @@
       "name": "Latest Blog Posts",
       "settings": {
         "blog": "news",
-        "heading": "U Perform Blog.",
+        "heading": "U Perform Blog<span>.</span>",
         "heading_size": "h2",
         "heading_font": "playfair_display_n4",
         "heading_color": "#000000",
