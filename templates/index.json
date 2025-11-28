@@ -282,7 +282,7 @@
         "show_read_more": false,
         "read_more_text": "Read more",
         "article_title_color": "#000000",
-        "excerpt_color": "#666666",
+        "excerpt_color": "#000000",
         "show_view_all": false,
         "view_all_text": "View all articles",
         "padding_top": 40,
