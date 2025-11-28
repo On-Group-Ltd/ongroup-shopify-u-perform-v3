@@ -98,9 +98,9 @@
 }
 
 .latest-blog__article-title {
-  font-size: 1.1rem;
+  font-family: "georgiapro", sans-serif;
+  font-size: 3rem;
   font-weight: 600;
-  font-style: italic;
   margin: 0 0 12px 0;
   line-height: 1.4;
 }
