@@ -98,11 +98,11 @@
 }
 
 .latest-blog__article-title {
-  font-family: "georgiapro", sans-serif;
-  font-size: 3rem;
-  font-weight: 600;
-  margin: 0 0 12px 0;
-  line-height: 1;
+  font-family: georgiapro, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 0 0 12px;
+  line-height: 1.2;
   text-align: center;
 }
 
