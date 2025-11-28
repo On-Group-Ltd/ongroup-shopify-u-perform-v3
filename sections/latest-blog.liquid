@@ -64,8 +64,8 @@
             <article class="latest-blog__article">
               <h3 class="latest-blog__article-title">
                 <a href="{{ article.url }}">
-                {%- if article.title.size > 40 -%}
-                  {{ article.title | truncate: 40, '' }}<span class="latest-blog__ellipsis">...</span>
+                {%- if article.title.size > 50 -%}
+                  {{ article.title | truncate: 50, '' }}<span class="latest-blog__ellipsis">...</span>
                 {%- else -%}
                   {{ article.title }}
                 {%- endif -%}
