@@ -63,9 +63,11 @@
 
             <article class="latest-blog__article">
               <h3 class="latest-blog__article-title">
-                <a href="{{ article.url }}">
-                  {{ article.title | truncate: 50 }}
-                </a>
+                {%- if article.title.size > 40 -%}
+                  {{ article.title | truncate: 40, '' }}<span class="latest-blog__ellipsis">...</span>
+                {%- else -%}
+                  {{ article.title }}
+                {%- endif -%}
               </h3>
               {%- if section.settings.show_image -%}
                 <a href="{{ article.url }}" class="latest-blog__image-wrapper">
