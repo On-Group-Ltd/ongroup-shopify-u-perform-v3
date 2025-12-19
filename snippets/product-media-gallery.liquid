@@ -125,35 +125,168 @@
         {%- endunless -%}
       {%- endfor -%}
     </ul>
-    <div class="slider-buttons quick-add-hidden{% if hide_mobile_slider %} small-hide{% endif %}">
+    <div class="slider-buttons slider-buttons--image-overlay">
       <button
         type="button"
-        class="slider-button slider-button--prev"
+        class="slider-button slider-button--prev slider-button--image-overlay"
         name="previous"
         aria-label="{{ 'general.slider.previous_slide' | t }}"
+        data-step="1"
       >
         <span class="svg-wrapper">
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
       </button>
-      <div class="slider-counter caption">
-        <span class="slider-counter--current">1</span>
-        <span aria-hidden="true"> / </span>
-        <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-        <span class="slider-counter--total">{{ media_count }}</span>
-      </div>
       <button
         type="button"
-        class="slider-button slider-button--next"
+        class="slider-button slider-button--next slider-button--image-overlay"
         name="next"
         aria-label="{{ 'general.slider.next_slide' | t }}"
+        data-step="1"
       >
         <span class="svg-wrapper">
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
       </button>
     </div>
+    <div class="slider-counter caption slider-counter--overlay">
+      <span class="slider-counter--current">1</span>
+      <span aria-hidden="true"> / </span>
+      <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+      <span class="slider-counter--total">{{ media_count }}</span>
+    </div>
   </slider-component>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const galleryId = 'GalleryViewer-{{ section.id }}';
+      const sliderComponent = document.getElementById(galleryId);
+      const mediaGallery = document.getElementById('MediaGallery-{{ section.id }}');
+
+      console.log('Gallery ID:', galleryId);
+      console.log('Slider Component:', sliderComponent);
+
+      if (!sliderComponent) {
+        console.error('Slider component not found');
+        return;
+      }
+
+      const slider = sliderComponent.querySelector('[id^="Slider-"]');
+      const prevButton = sliderComponent.querySelector('.slider-button--prev');
+      const nextButton = sliderComponent.querySelector('.slider-button--next');
+      const slides = Array.from(sliderComponent.querySelectorAll('[id^="Slide-"]'));
+      const currentCounter = sliderComponent.querySelector('.slider-counter--current');
+      const totalCounter = sliderComponent.querySelector('.slider-counter--total');
+      const thumbnailDots = mediaGallery ? Array.from(mediaGallery.querySelectorAll('.thumbnail-dot')) : [];
+
+      console.log('Slider:', slider);
+      console.log('Prev Button:', prevButton);
+      console.log('Next Button:', nextButton);
+      console.log('Slides:', slides);
+      console.log('Slides length:', slides.length);
+      console.log('Thumbnail dots:', thumbnailDots);
+
+      if (!slider || !prevButton || !nextButton || slides.length === 0) {
+        console.error('Missing required elements');
+        return;
+      }
+
+      let currentIndex = 0;
+
+      function scrollToSlide(index) {
+        console.log('Scrolling to slide:', index);
+
+        if (index < 0 || index >= slides.length) {
+          console.log('Index out of bounds');
+          return;
+        }
+
+        currentIndex = index;
+        const targetSlide = slides[currentIndex];
+
+        console.log('Target slide:', targetSlide);
+        console.log('Offset left:', targetSlide.offsetLeft);
+
+        // Remove is-active class from all slides
+        slides.forEach(function(slide) {
+          slide.classList.remove('is-active');
+        });
+
+        // Add is-active class to target slide
+        targetSlide.classList.add('is-active');
+
+        // Update thumbnail dots
+        if (thumbnailDots.length > 0) {
+          thumbnailDots.forEach(function(dot, i) {
+            if (i === currentIndex) {
+              dot.setAttribute('aria-current', 'true');
+            } else {
+              dot.removeAttribute('aria-current');
+            }
+          });
+        }
+
+        // Scroll to the slide
+        slider.scrollTo({
+          left: targetSlide.offsetLeft,
+          behavior: 'smooth'
+        });
+
+        // Alternative: Force scroll using scrollLeft
+        slider.scrollLeft = targetSlide.offsetLeft;
+
+        // Update counter
+        if (currentCounter && totalCounter) {
+          currentCounter.textContent = currentIndex + 1;
+          totalCounter.textContent = slides.length;
+        }
+
+        updateButtons();
+      }
+
+      function updateButtons() {
+        if (currentIndex === 0) {
+          prevButton.setAttribute('disabled', 'disabled');
+          prevButton.style.opacity = '0.5';
+        } else {
+          prevButton.removeAttribute('disabled');
+          prevButton.style.opacity = '1';
+        }
+
+        if (currentIndex === slides.length - 1) {
+          nextButton.setAttribute('disabled', 'disabled');
+          nextButton.style.opacity = '0.5';
+        } else {
+          nextButton.removeAttribute('disabled');
+          nextButton.style.opacity = '1';
+        }
+      }
+
+      prevButton.addEventListener('click', function(e) {
+        console.log('Prev button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToSlide(currentIndex - 1);
+      }, true);
+
+      nextButton.addEventListener('click', function(e) {
+        console.log('Next button clicked');
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToSlide(currentIndex + 1);
+      }, true);
+
+      // Initialize counter
+      if (currentCounter && totalCounter) {
+        currentCounter.textContent = '1';
+        totalCounter.textContent = slides.length;
+      }
+
+      updateButtons();
+      console.log('Navigation initialized');
+    });
+  </script>
+
   {%- if first_3d_model -%}
     <button
       class="button button--full-width product__xr-button"
@@ -231,23 +364,13 @@
               Thumbnail-{{ section.id }}-0
             {%- endcapture -%}
             <button
-              class="thumbnail global-media-settings global-media-settings--no-shadow"
+              class="thumbnail thumbnail-dot"
               aria-label="{%- if featured_media.media_type == 'image' -%}{{ 'products.product.media.load_image' | t: index: media_index }}{%- elsif featured_media.media_type == 'model' -%}{{ 'products.product.media.load_model' | t: index: media_index }}{%- elsif featured_media.media_type == 'video' or featured_media.media_type == 'external_video' -%}{{ 'products.product.media.load_video' | t: index: media_index }}{%- endif -%}"
               aria-current="true"
               aria-controls="GalleryViewer-{{ section.id }}"
               aria-describedby="{{ thumbnail_id }}"
             >
-              {{
-                featured_media.preview_image
-                | image_url: width: 416
-                | image_tag:
-                  loading: 'lazy',
-                  sizes: sizes,
-                  widths: '54, 74, 104, 162, 208, 324, 416',
-                  id: thumbnail_id,
-                  alt: featured_media.alt
-                | escape
-              }}
+              <span class="dot"></span>
             </button>
           </li>
         {%- endif -%}
@@ -288,7 +411,7 @@
                 Thumbnail-{{ section.id }}-{{ forloop.index }}
               {%- endcapture -%}
               <button
-                class="thumbnail global-media-settings global-media-settings--no-shadow"
+                class="thumbnail thumbnail-dot"
                 aria-label="{%- if media.media_type == 'image' -%}{{ 'products.product.media.load_image' | t: index: media_index }}{%- elsif media.media_type == 'model' -%}{{ 'products.product.media.load_model' | t: index: media_index }}{%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}{{ 'products.product.media.load_video' | t: index: media_index }}{%- endif -%}"
                 {% if media == product.selected_or_first_available_variant.featured_media
                   or product.selected_or_first_available_variant.featured_media == null
@@ -299,17 +422,7 @@
                 aria-controls="GalleryViewer-{{ section.id }}"
                 aria-describedby="{{ thumbnail_id }}"
               >
-                {{
-                  media.preview_image
-                  | image_url: width: 416
-                  | image_tag:
-                    loading: 'lazy',
-                    sizes: sizes,
-                    widths: '54, 74, 104, 162, 208, 324, 416',
-                    id: thumbnail_id,
-                    alt: media.alt
-                  | escape
-                }}
+                <span class="dot"></span>
               </button>
             </li>
           {%- endunless -%}
