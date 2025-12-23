@@ -201,10 +201,10 @@
         "settings": {
           "background": "rgba(0,0,0,0)",
           "background_gradient": "",
-          "text": "#80755b",
+          "text": "#000",
           "button": "#000",
-          "button_label": "#867550",
-          "secondary_button_label": "#000",
+          "button_label": "#000",
+          "secondary_button_label": "#857550",
           "shadow": "#000"
         }
       }
