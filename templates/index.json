@@ -202,7 +202,8 @@
       "type": "featured-collection",
       "custom_css": [
         "h2 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}",
-        "h2 span {color: #857550;}"
+        "h2 span {color: #857550;}",
+        ".button, .button-label, .shopify-challenge__button, .customer button {font-size: 2rem;}"
       ],
       "settings": {
         "collection": "collagen-collection",
