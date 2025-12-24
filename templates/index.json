@@ -204,12 +204,12 @@
         "h2 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}",
         "h2 span {color: #857550;}",
         ".button,.button-label,.shopify-challenge__button,.customer button {font-size: 2rem;}",
-        ".card__heading.h5, .card-information>.price {font-size: 2.5rem;}"
+        ".card__heading.h5,.card-information > .price {font-size: 2.5rem;}"
       ],
       "settings": {
         "collection": "collagen-collection",
         "products_to_show": 3,
-        "title": "Shop Best Sellers.",
+        "title": "Shop Best Sellers<span>.</span>",
         "heading_size": "hxxl",
         "description": "",
         "show_description": false,
