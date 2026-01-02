@@ -163,11 +163,7 @@
       const sliderComponent = document.getElementById(galleryId);
       const mediaGallery = document.getElementById('MediaGallery-{{ section.id }}');
 
-      console.log('Gallery ID:', galleryId);
-      console.log('Slider Component:', sliderComponent);
-
       if (!sliderComponent) {
-        console.error('Slider component not found');
         return;
       }
 
@@ -179,33 +175,19 @@
       const totalCounter = sliderComponent.querySelector('.slider-counter--total');
       const thumbnailDots = mediaGallery ? Array.from(mediaGallery.querySelectorAll('.thumbnail-dot')) : [];
 
-      console.log('Slider:', slider);
-      console.log('Prev Button:', prevButton);
-      console.log('Next Button:', nextButton);
-      console.log('Slides:', slides);
-      console.log('Slides length:', slides.length);
-      console.log('Thumbnail dots:', thumbnailDots);
-
       if (!slider || !prevButton || !nextButton || slides.length === 0) {
-        console.error('Missing required elements');
         return;
       }
 
       let currentIndex = 0;
 
       function scrollToSlide(index) {
-        console.log('Scrolling to slide:', index);
-
         if (index < 0 || index >= slides.length) {
-          console.log('Index out of bounds');
           return;
         }
 
         currentIndex = index;
         const targetSlide = slides[currentIndex];
-
-        console.log('Target slide:', targetSlide);
-        console.log('Offset left:', targetSlide.offsetLeft);
 
         // Remove is-active class from all slides
         slides.forEach(function(slide) {
@@ -263,14 +245,12 @@
       }
 
       prevButton.addEventListener('click', function(e) {
-        console.log('Prev button clicked');
         e.preventDefault();
         e.stopPropagation();
         scrollToSlide(currentIndex - 1);
       }, true);
 
       nextButton.addEventListener('click', function(e) {
-        console.log('Next button clicked');
         e.preventDefault();
         e.stopPropagation();
         scrollToSlide(currentIndex + 1);
@@ -283,7 +263,6 @@
       }
 
       updateButtons();
-      console.log('Navigation initialized');
     });
   </script>
 

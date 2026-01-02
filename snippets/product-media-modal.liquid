@@ -27,31 +27,191 @@
     </button>
 
     <div
-      class="product-media-modal__content color-{{ section.settings.color_scheme }} gradient"
+      class="product-media-modal__content-wrapper color-{{ section.settings.color_scheme }} gradient"
       role="document"
-      aria-label="{{ 'products.modal.label' | t }}"
       tabindex="0"
     >
-      {%- liquid
-        if product.selected_or_first_available_variant.featured_media != null
-          assign media = product.selected_or_first_available_variant.featured_media
-          render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants
-        endif
-      -%}
+      <div class="product-media-modal__slider">
+        <div class="product-media-modal__content" aria-label="{{ 'products.modal.label' | t }}">
+          {%- if product.selected_or_first_available_variant.featured_media != null -%}
+            <div class="modal-slide modal-slide--active" data-slide-index="0">
+              {%- render 'product-media', media: product.selected_or_first_available_variant.featured_media, loop: section.settings.enable_video_looping, variant_image: section.settings.hide_variants -%}
+            </div>
+          {%- endif -%}
 
-      {%- for media in product.media -%}
-        {%- liquid
-          if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
-            assign variant_image = true
-          else
-            assign variant_image = false
-          endif
+          {%- for media in product.media -%}
+            {%- liquid
+              if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+                assign variant_image = true
+              else
+                assign variant_image = false
+              endif
+            -%}
+            {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
+              <div class="modal-slide" data-slide-index="{{ forloop.index }}">
+                {%- render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_image -%}
+              </div>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
 
-          unless media.id == product.selected_or_first_available_variant.featured_media.id
-            render 'product-media', media: media, loop: section.settings.enable_video_looping, variant_image: variant_image
-          endunless
-        -%}
-      {%- endfor -%}
+        <div class="modal-slider-arrows">
+          <button class="modal-arrow modal-arrow--prev" aria-label="Previous image">
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </button>
+          <button class="modal-arrow modal-arrow--next" aria-label="Next image">
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="product-media-modal__thumbnails">
+        <div class="modal-thumbnail-list">
+          {%- if product.selected_or_first_available_variant.featured_media != null -%}
+            <button class="modal-thumbnail modal-thumbnail--active" data-modal-index="0">
+              <img src="{{ product.selected_or_first_available_variant.featured_media | image_url: width: 150 }}"
+                   alt="{{ product.selected_or_first_available_variant.featured_media.alt | escape }}"
+                   loading="lazy">
+            </button>
+          {%- endif -%}
+          {%- for media in product.media -%}
+            {%- unless media.id == product.selected_or_first_available_variant.featured_media.id -%}
+              <button class="modal-thumbnail" data-modal-index="{{ forloop.index }}">
+                <img src="{{ media.preview_image | image_url: width: 150 }}"
+                     alt="{{ media.alt | escape }}"
+                     loading="lazy">
+              </button>
+            {%- endunless -%}
+          {%- endfor -%}
+        </div>
+      </div>
     </div>
   </div>
 </product-modal>
+
+<script>
+  (function() {
+    // Wait for modal to be ready
+    function initModalSlider() {
+      const modal = document.getElementById('ProductModal-{{ section.id }}');
+      if (!modal) {
+        setTimeout(initModalSlider, 100);
+        return;
+      }
+
+      const slides = modal.querySelectorAll('.modal-slide');
+      const thumbnails = modal.querySelectorAll('.modal-thumbnail');
+      const prevArrow = modal.querySelector('.modal-arrow--prev');
+      const nextArrow = modal.querySelector('.modal-arrow--next');
+      const modalContentWrapper = modal.querySelector('.product-media-modal__content-wrapper');
+      const modalSlider = modal.querySelector('.product-media-modal__slider');
+      const modalContent = modal.querySelector('.product-media-modal__content');
+      const thumbnailsContainer = modal.querySelector('.product-media-modal__thumbnails');
+
+      let currentIndex = 0;
+
+      function showModalSlide(index) {
+        // Ensure index is within bounds
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+
+        currentIndex = index;
+
+        // Update slides
+        slides.forEach(function(slide, i) {
+          if (i === currentIndex) {
+            slide.classList.add('modal-slide--active');
+          } else {
+            slide.classList.remove('modal-slide--active');
+          }
+        });
+
+        // Update thumbnails
+        thumbnails.forEach(function(thumb, i) {
+          if (i === currentIndex) {
+            thumb.classList.add('modal-thumbnail--active');
+          } else {
+            thumb.classList.remove('modal-thumbnail--active');
+          }
+        });
+      }
+
+      // Prevent modal from closing - stop all pointer events from bubbling
+      function stopModalClose(e) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      }
+
+      // Add comprehensive event blocking to prevent modal close
+      ['pointerup', 'pointerdown'].forEach(function(eventType) {
+        if (modalContentWrapper) {
+          modalContentWrapper.addEventListener(eventType, stopModalClose, true);
+        }
+        if (modalSlider) {
+          modalSlider.addEventListener(eventType, stopModalClose, true);
+        }
+        if (modalContent) {
+          modalContent.addEventListener(eventType, stopModalClose, true);
+        }
+        if (thumbnailsContainer) {
+          thumbnailsContainer.addEventListener(eventType, stopModalClose, true);
+        }
+      });
+
+      // Prevent clicks on slides from closing modal
+      slides.forEach(function(slide) {
+        ['pointerup', 'pointerdown'].forEach(function(eventType) {
+          slide.addEventListener(eventType, stopModalClose, true);
+        });
+      });
+
+      // Add click listeners to thumbnails - use click event separately
+      thumbnails.forEach(function(thumbnail, index) {
+        thumbnail.addEventListener('pointerup', stopModalClose, true);
+        thumbnail.addEventListener('pointerdown', stopModalClose, true);
+        thumbnail.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showModalSlide(index);
+        });
+      });
+
+      // Add click listeners to arrows - use click event separately
+      if (prevArrow) {
+        prevArrow.addEventListener('pointerup', stopModalClose, true);
+        prevArrow.addEventListener('pointerdown', stopModalClose, true);
+        prevArrow.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showModalSlide(currentIndex - 1);
+        });
+      }
+
+      if (nextArrow) {
+        nextArrow.addEventListener('pointerup', stopModalClose, true);
+        nextArrow.addEventListener('pointerdown', stopModalClose, true);
+        nextArrow.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showModalSlide(currentIndex + 1);
+        });
+      }
+
+      // Initialize - show first slide
+      if (slides.length > 0) {
+        showModalSlide(0);
+      }
+    }
+
+    // Start initialization
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initModalSlider);
+    } else {
+      initModalSlider();
+    }
+  })();
+</script>
