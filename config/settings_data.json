@@ -42,8 +42,8 @@
     "inputs_shadow_blur": 5,
     "card_style": "card",
     "card_image_padding": 0,
-    "card_text_alignment": "left",
-    "card_color_scheme": "scheme-1",
+    "card_text_alignment": "center",
+    "card_color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
     "card_border_thickness": 0,
     "card_border_opacity": 10,
     "card_corner_radius": 0,
@@ -195,6 +195,17 @@
           "button_label": "#334fb4",
           "secondary_button_label": "#ffffff",
           "shadow": "#121212"
+        }
+      },
+      "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133": {
+        "settings": {
+          "background": "rgba(0,0,0,0)",
+          "background_gradient": "",
+          "text": "#000",
+          "button": "#000",
+          "button_label": "#000",
+          "secondary_button_label": "#857550",
+          "shadow": "#000"
         }
       }
     }
