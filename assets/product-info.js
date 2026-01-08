@@ -196,9 +196,14 @@ if (!customElements.get('product-info')) {
           this.querySelector(`#Quantity-Rules-${this.dataset.section}`)?.classList.remove('hidden');
           this.querySelector(`#Volume-Note-${this.dataset.section}`)?.classList.remove('hidden');
 
+          const formattedPrice = variant.price && typeof Shopify !== 'undefined' && Shopify.formatMoney
+            ? Shopify.formatMoney(variant.price, window.theme?.moneyFormat || '{{amount}}')
+            : '';
+
           this.productForm?.toggleSubmitButton(
-            html.getElementById(`ProductSubmitButton-${this.sectionId}`)?.hasAttribute('disabled') ?? true,
-            window.variantStrings.soldOut
+            !variant.available,
+            window.variantStrings.soldOut,
+            formattedPrice
           );
 
           publish(PUB_SUB_EVENTS.variantChange, {

@@ -124,13 +124,31 @@ if (!customElements.get('product-form')) {
         }
       }
 
-      toggleSubmitButton(disable = true, text) {
+      toggleSubmitButton(disable = true, text, price) {
         if (disable) {
           this.submitButton.setAttribute('disabled', 'disabled');
           if (text) this.submitButtonText.textContent = text;
         } else {
           this.submitButton.removeAttribute('disabled');
-          this.submitButtonText.textContent = window.variantStrings.addToCart;
+
+          // Check if this is the custom button structure with separate label and price spans
+          const buttonLabel = this.submitButtonText.querySelector('.button-label');
+          const buttonPrice = this.submitButtonText.querySelector('.button-price');
+
+          if (buttonLabel && buttonPrice) {
+            // Custom button structure (custom-product-info-row)
+            buttonLabel.textContent = window.variantStrings.addToCart;
+            if (price) {
+              buttonPrice.textContent = price;
+            }
+          } else {
+            // Standard button structure
+            if (price) {
+              this.submitButtonText.textContent = `${window.variantStrings.addToCart} - ${price}`;
+            } else {
+              this.submitButtonText.textContent = window.variantStrings.addToCart;
+            }
+          }
         }
       }
 

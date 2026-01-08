@@ -1,0 +1,123 @@
+{{ 'component-custom-product-info-row.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- assign product_form_id = 'custom-product-form-' | append: section.id -%}
+
+<div class="page-width section-{{ section.id }}-padding">
+  <div class="custom-product-info-container">
+    {%- if section.settings.show_title -%}
+      <h2 class="custom-product-info-title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+
+    {%- render 'custom-product-info-row',
+      product: product,
+      section_id: section.id,
+      product_form_id: product_form_id,
+      show_installment: section.settings.show_installment
+    -%}
+  </div>
+</div>
+
+<style>
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .custom-product-info-container {
+    max-width: {{ section.settings.container_width }}px;
+    margin: 0 auto;
+  }
+
+  .custom-product-info-title {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 749px) {
+    .custom-product-info-title {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Product Info Row",
+  "tag": "section",
+  "class": "section custom-product-info-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show Section Title",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Product Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_installment",
+      "label": "Show Installment Message",
+      "default": true,
+      "info": "Display payment term options if available"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "min": 600,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Width",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Product Info Row"
+    }
+  ]
+}
+{% endschema %}

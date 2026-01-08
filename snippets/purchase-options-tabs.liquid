@@ -1,0 +1,300 @@
+{% comment %}
+  Renders purchase options tabs for one-time purchase and subscription.
+  Integrates with Recharge Subscriptions.
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information (optional).
+
+  Usage:
+  {% render 'purchase-options-tabs', product: product %}
+{% endcomment %}
+
+<style>
+  .purchase-options-tabs {
+    margin-bottom: 1.5rem;
+  }
+
+  .purchase-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid rgba(var(--color-foreground), 0.1);
+    margin-bottom: 1rem;
+  }
+
+  .purchase-tab {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgba(var(--color-foreground), 0.7);
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .purchase-tab:hover {
+    color: rgb(var(--color-foreground));
+    background: rgba(var(--color-foreground), 0.02);
+  }
+
+  .purchase-tab.active {
+    color: rgb(var(--color-foreground));
+    border-bottom-color: rgb(var(--color-foreground));
+  }
+
+  .purchase-tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .purchase-tab-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .purchase-option-details {
+    padding: 1.5rem;
+    background: rgba(var(--color-foreground), 0.02);
+    border-radius: 0.5rem;
+  }
+
+  .purchase-option-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .purchase-option-description {
+    font-size: 1.4rem;
+    color: rgba(var(--color-foreground), 0.7);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .purchase-option-price {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .purchase-option-savings {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: rgba(var(--color-foreground), 0.1);
+    border-radius: 0.3rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: rgb(var(--color-foreground));
+  }
+
+  .subscription-frequency {
+    margin-top: 1rem;
+  }
+
+  .subscription-frequency label {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .subscription-frequency select {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.4rem;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    border-radius: 0.5rem;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+  }
+
+  .recharge-subscription-widget {
+    margin-top: 1rem;
+  }
+</style>
+
+<div class="purchase-options-tabs" {{ block.shopify_attributes }}>
+  <div class="purchase-tabs" role="tablist">
+    <button
+      class="purchase-tab active"
+      role="tab"
+      aria-selected="true"
+      aria-controls="one-time-purchase"
+      data-tab="one-time"
+      type="button"
+    >
+      One-Time Purchase
+    </button>
+    <button
+      class="purchase-tab"
+      role="tab"
+      aria-selected="false"
+      aria-controls="subscription-purchase"
+      data-tab="subscription"
+      type="button"
+    >
+      Subscribe & Save
+    </button>
+  </div>
+
+  <div
+    id="one-time-purchase"
+    class="purchase-tab-content active"
+    role="tabpanel"
+    data-content="one-time"
+  >
+    <div class="purchase-option-details">
+      <h3 class="purchase-option-title">One-Time Purchase</h3>
+      <p class="purchase-option-description">
+        Purchase this product once at the regular price.
+      </p>
+      <div class="purchase-option-price">
+        {{ product.selected_or_first_available_variant.price | money }}
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="subscription-purchase"
+    class="purchase-tab-content"
+    role="tabpanel"
+    data-content="subscription"
+  >
+    <div class="purchase-option-details">
+      <h3 class="purchase-option-title">Subscribe & Save</h3>
+      <p class="purchase-option-description">
+        Never run out! Get this product delivered regularly and save.
+      </p>
+
+      {%- liquid
+        assign subscription_discount = 10
+        assign subscription_price = product.selected_or_first_available_variant.price | times: 0.9
+      -%}
+
+      <div class="purchase-option-price">
+        {{ subscription_price | money }}
+        <span class="purchase-option-savings">Save {{ subscription_discount }}%</span>
+      </div>
+
+      <div class="subscription-frequency">
+        <label for="subscription-frequency-{{ section.id }}">Delivery Frequency</label>
+        <select id="subscription-frequency-{{ section.id }}" name="subscription_frequency">
+          <option value="30">Every 30 days</option>
+          <option value="60">Every 60 days</option>
+          <option value="90">Every 90 days</option>
+        </select>
+      </div>
+
+      {%- comment -%}
+        Recharge subscription widget will be injected here
+        The Recharge app will automatically detect and populate this container
+      {%- endcomment -%}
+      <div class="recharge-subscription-widget" data-recharge-widget></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  if (!customElements.get('purchase-options-tabs')) {
+    class PurchaseOptionsTabs extends HTMLElement {
+      constructor() {
+        super();
+        this.tabs = this.querySelectorAll('.purchase-tab');
+        this.contents = this.querySelectorAll('.purchase-tab-content');
+        this.init();
+      }
+
+      init() {
+        this.tabs.forEach(tab => {
+          tab.addEventListener('click', () => this.switchTab(tab));
+        });
+
+        // Listen for variant changes to update prices
+        document.addEventListener('variant:change', (event) => {
+          this.updatePrices(event.detail.variant);
+        });
+      }
+
+      switchTab(selectedTab) {
+        const tabType = selectedTab.dataset.tab;
+
+        // Update tabs
+        this.tabs.forEach(tab => {
+          const isSelected = tab === selectedTab;
+          tab.classList.toggle('active', isSelected);
+          tab.setAttribute('aria-selected', isSelected);
+        });
+
+        // Update content
+        this.contents.forEach(content => {
+          const isActive = content.dataset.content === tabType;
+          content.classList.toggle('active', isActive);
+        });
+
+        // Update hidden input for purchase type (for Recharge integration)
+        this.updatePurchaseType(tabType);
+      }
+
+      updatePurchaseType(type) {
+        // Find or create hidden input for purchase type
+        const form = this.closest('form') || document.querySelector('form[data-type="add-to-cart-form"]');
+        if (!form) return;
+
+        let input = form.querySelector('input[name="purchase_type"]');
+        if (!input) {
+          input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'purchase_type';
+          form.appendChild(input);
+        }
+
+        input.value = type === 'subscription' ? 'autodeliver' : 'onetime';
+
+        // Dispatch event for Recharge or other integrations
+        document.dispatchEvent(new CustomEvent('purchase-type:change', {
+          detail: { type: type }
+        }));
+      }
+
+      updatePrices(variant) {
+        if (!variant) return;
+
+        const oneTimePrice = this.querySelector('[data-content="one-time"] .purchase-option-price');
+        const subscriptionPrice = this.querySelector('[data-content="subscription"] .purchase-option-price');
+
+        if (oneTimePrice) {
+          oneTimePrice.innerHTML = Shopify.formatMoney(variant.price, window.theme.moneyFormat || '{{amount}}');
+        }
+
+        if (subscriptionPrice) {
+          const discountedPrice = Math.round(variant.price * 0.9);
+          subscriptionPrice.innerHTML = `
+            ${Shopify.formatMoney(discountedPrice, window.theme.moneyFormat || '{{amount}}')}
+            <span class="purchase-option-savings">Save 10%</span>
+          `;
+        }
+      }
+    }
+
+    customElements.define('purchase-options-tabs', PurchaseOptionsTabs);
+  }
+
+  // Initialize the component
+  document.addEventListener('DOMContentLoaded', () => {
+    const purchaseOptions = document.querySelector('.purchase-options-tabs');
+    if (purchaseOptions && !purchaseOptions.closest('purchase-options-tabs')) {
+      const wrapper = document.createElement('purchase-options-tabs');
+      purchaseOptions.parentNode.insertBefore(wrapper, purchaseOptions);
+      wrapper.appendChild(purchaseOptions);
+    }
+  });
+</script>
