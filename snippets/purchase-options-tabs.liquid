@@ -222,67 +222,7 @@
   .recharge-subscription-widget {
     margin-top: 1rem;
   }
-
-  .subscription-options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .subscription-option-item {
-    padding: 1rem;
-    border: 2px solid rgba(var(--color-foreground), 0.1);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .subscription-option-item:hover {
-    border-color: rgba(var(--color-foreground), 0.3);
-    background: rgba(var(--color-foreground), 0.02);
-  }
-
-  .subscription-option-item.selected {
-    border-color: rgb(var(--color-foreground));
-    background: rgba(var(--color-foreground), 0.05);
-  }
-
-  .subscription-option-item input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .subscription-option-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
-
-  .subscription-option-name {
-    font-weight: 500;
-    font-size: 1.4rem;
-  }
-
-  .subscription-option-overview {
-    margin-top: 0.5rem;
-    font-size: 1.3rem;
-    color: rgba(var(--color-foreground), 0.7);
-    line-height: 1.5;
-  }
 </style>
-
-{%- liquid
-  assign subscription_tab_title = 'Subscribe & Save'
-  if subsarray.size > 0
-    assign first_subopt = subsarray | first
-    assign first_subdata = first_subopt | split: "||"
-    if first_subdata[3] != blank
-      assign subscription_tab_title = first_subdata[3]
-    endif
-  endif
--%}
 
 <div class="purchase-options-tabs" {{ block.shopify_attributes }} data-section-id="{{ section.id }}">
   <div class="purchase-tabs" role="tablist">
@@ -298,16 +238,24 @@
       One-Time Purchase
     </button>
     {%- endunless -%}
-    <button
-      class="purchase-tab {% if product.requires_selling_plan or current_selected_option != '' %}active{% endif %}"
-      role="tab"
-      aria-selected="{% if product.requires_selling_plan or current_selected_option != '' %}true{% else %}false{% endif %}"
-      aria-controls="subscription-purchase"
-      data-tab="subscription"
-      type="button"
-    >
-      {{ subscription_tab_title }}
-    </button>
+
+    {%- if subsarray.size > 0 -%}
+      {%- assign optnum = 1 -%}
+      {%- for subopt in subsarray -%}
+        {%- assign subdata = subopt | split: "||" -%}
+        <button
+          class="purchase-tab {% if product.requires_selling_plan and optnum == 1 %}active{% elsif current_selected_option == current_variant.id %}active{% endif %}"
+          role="tab"
+          aria-selected="{% if product.requires_selling_plan and optnum == 1 %}true{% elsif current_selected_option == current_variant.id %}true{% else %}false{% endif %}"
+          aria-controls="subscription-{{ optnum }}"
+          data-tab="subscription-{{ optnum }}"
+          type="button"
+        >
+          {{ subdata[3] }}
+        </button>
+        {%- assign optnum = optnum | plus: 1 -%}
+      {%- endfor -%}
+    {%- endif -%}
   </div>
 
   {%- unless product.requires_selling_plan -%}
@@ -339,64 +287,55 @@
   </div>
   {%- endunless -%}
 
-  <div
-    id="subscription-purchase"
-    class="purchase-tab-content {% if product.requires_selling_plan or current_selected_option != '' %}active{% endif %}"
-    role="tabpanel"
-    data-content="subscription"
-  >
-    <div class="purchase-option-details">
-      <h3 class="purchase-option-title">Subscribe & Save</h3>
-      <p class="purchase-option-description">
-        Never run out! Get this product delivered regularly and save.
-      </p>
-
-      {%- if subsarray.size > 0 -%}
-      <div class="subscription-options-list">
-        {%- assign optnum = 1 -%}
-        {%- for subopt in subsarray -%}
-          {%- assign subdata = subopt | split: "||" -%}
-          <div class="subscription-option-item {% if product.requires_selling_plan and optnum == 1 %}selected{% elsif current_selected_option == current_variant.id %}selected{% endif %}">
-            <input type="radio"
-              name="purchase-option"
-              id="purchase-option-sub-{{ optnum }}"
-              class="visually-hidden"
-              data-purchase-type="subscription"
-              data-variant-id="{{ subdata[1] }}"
-              data-selling-plan-id="{{ subdata[2] }}"
-              data-compare-price="{{ subdata[6] | money }}"
-              data-final-price="{{ subdata[7] | money }}"
-              data-savings="{{ subdata[5] | money }}"
-              {%- if product.requires_selling_plan -%}
-                {%- if optnum == 1 -%}
-                  checked="checked"
-                {%- endif -%}
-              {% elsif current_selected_option == current_variant.id %}checked="checked"
-              {%- endif -%}
-            />
-            <label for="purchase-option-sub-{{ optnum }}" class="subscription-option-label">
-              <div>
-                <div class="subscription-option-name">{{ subdata[3] }}</div>
-                {%- if subdata[9] != blank -%}
-                <div class="subscription-option-overview">{{ subdata[9] }}</div>
-                {%- endif -%}
-              </div>
-              <div class="purchase-option-price">
-                {{ subdata[7] | money }}
-                {%- if subdata[5] != blank and subdata[5] != '0' -%}
-                <span class="purchase-option-savings">Save {{ subdata[5] | money }}</span>
-                {%- endif -%}
-              </div>
-            </label>
+  {%- if subsarray.size > 0 -%}
+    {%- assign optnum = 1 -%}
+    {%- for subopt in subsarray -%}
+      {%- assign subdata = subopt | split: "||" -%}
+      <div
+        id="subscription-{{ optnum }}"
+        class="purchase-tab-content {% if product.requires_selling_plan and optnum == 1 %}active{% elsif current_selected_option == current_variant.id %}active{% endif %}"
+        role="tabpanel"
+        data-content="subscription-{{ optnum }}"
+      >
+        <div class="purchase-option-details">
+          <h3 class="purchase-option-title">{{ subdata[3] }}</h3>
+          {%- if subdata[9] != blank -%}
+          <p class="purchase-option-description">
+            {{ subdata[9] }}
+          </p>
+          {%- else -%}
+          <p class="purchase-option-description">
+            Never run out! Get this product delivered regularly and save.
+          </p>
+          {%- endif -%}
+          <div class="purchase-option-price">
+            {{ subdata[7] | money }}
+            {%- if subdata[5] != blank and subdata[5] != '0' -%}
+            <span class="purchase-option-savings">Save {{ subdata[5] | money }}</span>
+            {%- endif -%}
           </div>
-          {%- assign optnum = optnum | plus: 1 -%}
-        {%- endfor -%}
+          <input type="radio"
+            name="purchase-option"
+            id="purchase-option-sub-{{ optnum }}"
+            class="visually-hidden"
+            data-purchase-type="subscription"
+            data-variant-id="{{ subdata[1] }}"
+            data-selling-plan-id="{{ subdata[2] }}"
+            data-compare-price="{{ subdata[6] | money }}"
+            data-final-price="{{ subdata[7] | money }}"
+            data-savings="{{ subdata[5] | money }}"
+            {%- if product.requires_selling_plan -%}
+              {%- if optnum == 1 -%}
+                checked="checked"
+              {%- endif -%}
+            {% elsif current_selected_option == current_variant.id %}checked="checked"
+            {%- endif -%}
+          />
+        </div>
       </div>
-      {%- else -%}
-      <p>No subscription options available for this product.</p>
-      {%- endif -%}
-    </div>
-  </div>
+      {%- assign optnum = optnum | plus: 1 -%}
+    {%- endfor -%}
+  {%- endif -%}
 </div>
 
 <script>
@@ -411,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = purchaseTabsContainer.querySelectorAll('.purchase-tab');
   const contents = purchaseTabsContainer.querySelectorAll('.purchase-tab-content');
   const allOptions = purchaseTabsContainer.querySelectorAll('input[name="purchase-option"]');
-  const subscriptionItems = purchaseTabsContainer.querySelectorAll('.subscription-option-item');
 
   // Tab switching
   tabs.forEach(tab => {
@@ -434,18 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
       content.classList.toggle('active', isActive);
     });
 
-    // Select the appropriate radio option when switching tabs
-    if (tabType === 'one-time') {
-      const oneTimeOption = purchaseTabsContainer.querySelector('input[data-purchase-type="one-time"]');
-      if (oneTimeOption) {
-        oneTimeOption.checked = true;
-        updateForm();
-        updatePrice();
-      }
-    } else if (tabType === 'subscription') {
-      const firstSubOption = purchaseTabsContainer.querySelector('input[data-purchase-type="subscription"]');
-      if (firstSubOption) {
-        firstSubOption.checked = true;
+    // Select the radio option for the active tab
+    const activeContent = purchaseTabsContainer.querySelector(`[data-content="${tabType}"]`);
+    if (activeContent) {
+      const radioOption = activeContent.querySelector('input[name="purchase-option"]');
+      if (radioOption) {
+        radioOption.checked = true;
         updateForm();
         updatePrice();
       }
@@ -457,30 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
     option.addEventListener('change', (e) => {
       updateForm();
       updatePrice();
-
-      // Update visual selection state for subscription items
-      subscriptionItems.forEach(item => {
-        const radio = item.querySelector('input[type="radio"]');
-        if (radio.checked) {
-          item.classList.add('selected');
-        } else {
-          item.classList.remove('selected');
-        }
-      });
-    });
-  });
-
-  // Handle subscription item clicks
-  subscriptionItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-      // Don't trigger if clicking the label directly (it will handle the radio)
-      if (e.target.tagName === 'LABEL' || e.target.closest('label')) return;
-
-      const radio = item.querySelector('input[type="radio"]');
-      if (radio) {
-        radio.checked = true;
-        radio.dispatchEvent(new Event('change'));
-      }
     });
   });
 
@@ -592,13 +500,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize price and form based on currently selected option
   updatePrice();
   updateForm();
-
-  // Set initial selected state for subscription items
-  subscriptionItems.forEach(item => {
-    const radio = item.querySelector('input[type="radio"]');
-    if (radio && radio.checked) {
-      item.classList.add('selected');
-    }
-  });
 });
 </script>
