@@ -403,12 +403,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const savingsElement = priceField ? priceField.querySelector('.price-item__savings') : null;
 
     // Update price in the add to cart button
+    // Handle standard ProductSubmitButton
     const addToCartButton = document.querySelector(`#ProductSubmitButton-${sectionId}`);
     if (addToCartButton) {
       const buttonSpan = addToCartButton.querySelector('span');
       if (buttonSpan) {
         const addToCartText = buttonSpan.textContent.split(' - ')[0].trim();
         buttonSpan.textContent = `${addToCartText} - ${finalPrice}`;
+      }
+    }
+
+    // Handle CustomProductSubmit button
+    const customAddToCartButton = document.querySelector(`#CustomProductSubmit-${sectionId}`);
+    if (customAddToCartButton) {
+      const buttonPriceSpan = customAddToCartButton.querySelector('.button-price');
+      if (buttonPriceSpan) {
+        buttonPriceSpan.textContent = finalPrice;
       }
     }
 
