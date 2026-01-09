@@ -343,12 +343,21 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!purchaseTabsContainer) return;
 
   const sectionId = purchaseTabsContainer.dataset.sectionId;
-  const productAddForm = document.querySelector(`FORM#product-form-${sectionId}`);
+  let productAddForm = document.querySelector(`FORM#product-form-${sectionId}`);
+
+  // Fallback: try to find any product form if the specific one isn't found
+  if (!productAddForm) {
+    productAddForm = document.querySelector('form[data-type="add-to-cart-form"]');
+  }
+
   const priceField = document.querySelector(`.price-${sectionId}`);
   const qtyField = document.querySelector(`#Quantity-${sectionId}`);
   const tabs = purchaseTabsContainer.querySelectorAll('.purchase-tab');
   const contents = purchaseTabsContainer.querySelectorAll('.purchase-tab-content');
   const allOptions = purchaseTabsContainer.querySelectorAll('input[name="purchase-option"]');
+
+  console.log('Form found:', productAddForm);
+  console.log('Section ID:', sectionId);
 
   // Tab switching
   tabs.forEach(tab => {
@@ -487,10 +496,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const purchaseType = optSel.dataset.purchaseType;
 
     if (purchaseType === 'subscription' && sellingPlanId) {
-      const productOptions = productAddForm.querySelector('DIV.product-options');
-      if (productOptions) {
-        productOptions.insertAdjacentHTML('beforeend', `<input name="selling_plan" value="${sellingPlanId}" type="hidden">`);
-      }
+      // Add selling_plan directly to the form
+      const newSellingPlanInput = document.createElement('input');
+      newSellingPlanInput.type = 'hidden';
+      newSellingPlanInput.name = 'selling_plan';
+      newSellingPlanInput.value = sellingPlanId;
+      productAddForm.appendChild(newSellingPlanInput);
+
+      console.log('Added selling_plan to form:', sellingPlanId);
 
       // Hide payment options for subscriptions
       document.querySelectorAll('klarna-placement, afterpay-placement, square-placement').forEach(el => el.classList.add('hidden'));
