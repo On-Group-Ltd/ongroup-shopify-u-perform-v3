@@ -1,6 +1,6 @@
 {% comment %}
   Renders purchase options tabs for one-time purchase and subscription.
-  Integrates with Recharge Subscriptions.
+  Integrates with Recharge Subscriptions via selling plans.
 
   Accepts:
   - product: {Object} product object.
@@ -8,7 +8,109 @@
 
   Usage:
   {% render 'purchase-options-tabs', product: product %}
+
+  Based on og-recharge-widget-v3.liquid logic
 {% endcomment %}
+
+{% assign debugMode = false %}
+{% assign showPriceSavingNotPerc = true %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+  assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+  if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+    assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+  endif
+  assign offer = current_selling_plan_allocation | default: current_variant
+-%}
+
+{% comment %}Build subscription options array{% endcomment %}
+{% capture subslist %}
+{%- for selling_plan_group in product.selling_plan_groups -%}
+{%- for selling_plan in selling_plan_group.selling_plans -%}
+    {%- liquid
+        assign subdiscount = selling_plan.price_adjustments[0]
+        assign is_discounted = false
+          if subdiscount.value > 0
+              assign is_discounted = true
+          endif
+        assign subprice = current_variant.selling_plan_allocations[0]
+        assign sortid = 1000000 | plus: subprice.price
+
+        assign subsaving = selling_plan.price_adjustments[0].value
+        if showPriceSavingNotPerc
+            assign subsaving = subprice.compare_at_price | minus: subprice.price
+        endif
+
+        assign selling_plan_name = selling_plan.name
+        if product.metafields.info.subscription_description != blank
+          assign selling_plan_name = product.metafields.info.subscription_description
+        endif
+
+        assign sub_product_overview = ''
+        if product.metafields.info.subscription_overview != blank
+          assign sub_product_overview = product.metafields.info.subscription_overview
+        endif
+    -%}
+{{ sortid }}||{{ current_variant.id }}||{{ selling_plan.id }}||{{ selling_plan_name }}||||{{ subsaving }}||{{ subprice.compare_at_price }}||{{ subprice.price }}||{{ product.id }}||{{ sub_product_overview }} ::
+{%- endfor -%}
+{%- endfor -%}
+{%- assign subProductHandles =  product.metafields.info.subscription_products | split:'|' -%}
+{%- for subProdHandle in subProductHandles -%}
+{%- liquid
+  assign subex_product = all_products[subProdHandle]
+  assign subex_variant = subex_product.selected_or_first_available_variant | default: subex_product.variants.first
+  assign subprice = subex_variant.selling_plan_allocations[0]
+-%}
+
+    {%- for selling_plan_group in subex_product.selling_plan_groups -%}
+        {%- for selling_plan in selling_plan_group.selling_plans -%}
+            {%- liquid
+                assign subdiscount = selling_plan.price_adjustments[0]
+                assign is_discounted = false
+                      if subdiscount.value > 0
+                      assign is_discounted = true
+                  endif
+                assign subprice = subex_variant.selling_plan_allocations[0]
+
+                assign calcprice = subprice
+                assign calcdiscount = selling_plan.price_adjustments[0].value
+                if subex_product.requires_selling_plan
+                    assign calcprice = subex_variant
+                    assign calcdiscount = calcprice.compare_at_price | minus: calcprice.price | times: 100.0 | divided_by: calcprice.compare_at_price | money_without_currency | times: 100 | remove: '.0'
+                endif
+
+                assign subsaving = calcdiscount
+                if showPriceSavingNotPerc
+                    assign subsaving = calcprice.compare_at_price | minus: calcprice.price
+                endif
+
+                assign sortid = 1000000 | plus: calcprice.price
+
+                assign selling_plan_name = selling_plan.name
+                if subex_product.metafields.info.subscription_description != blank
+                  assign selling_plan_name = subex_product.metafields.info.subscription_description
+                endif
+
+                assign subex_product_overview = ''
+                if subex_product.metafields.info.subscription_overview != blank
+                  assign subex_product_overview = subex_product.metafields.info.subscription_overview
+                endif
+            -%}
+{{ sortid }}||{{ subex_variant.id }}||{{ selling_plan.id }}||{{ selling_plan_name }}||{{ subex_product.description | strip | strip_html | truncate: 250 }}||{{ subsaving }}||{{ calcprice.compare_at_price }}||{{ calcprice.price }}||{{ subex_product.id }}||{{ subex_product_overview }} ::
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endfor -%}
+{% endcapture %}
+{% assign subsarray = subslist | strip_newlines | split: '::' | sort %}
+
+{%- liquid
+  assign current_selected_option = ''
+  if product.metafields.info.preselected_product_variant != blank
+    assign current_selected_option = product.metafields.info.preselected_product_variant | split: ':' | last | plus: 0
+  endif
+  assign subsarray = subsarray | reverse
+-%}
 
 <style>
   .purchase-options-tabs {
@@ -120,24 +222,75 @@
   .recharge-subscription-widget {
     margin-top: 1rem;
   }
+
+  .subscription-options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .subscription-option-item {
+    padding: 1rem;
+    border: 2px solid rgba(var(--color-foreground), 0.1);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .subscription-option-item:hover {
+    border-color: rgba(var(--color-foreground), 0.3);
+    background: rgba(var(--color-foreground), 0.02);
+  }
+
+  .subscription-option-item.selected {
+    border-color: rgb(var(--color-foreground));
+    background: rgba(var(--color-foreground), 0.05);
+  }
+
+  .subscription-option-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subscription-option-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .subscription-option-name {
+    font-weight: 500;
+    font-size: 1.4rem;
+  }
+
+  .subscription-option-overview {
+    margin-top: 0.5rem;
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.7);
+    line-height: 1.5;
+  }
 </style>
 
-<div class="purchase-options-tabs" {{ block.shopify_attributes }}>
+<div class="purchase-options-tabs" {{ block.shopify_attributes }} data-section-id="{{ section.id }}">
   <div class="purchase-tabs" role="tablist">
+    {%- unless product.requires_selling_plan -%}
     <button
-      class="purchase-tab active"
+      class="purchase-tab {% if current_selected_option == '' %}active{% endif %}"
       role="tab"
-      aria-selected="true"
+      aria-selected="{% if current_selected_option == '' %}true{% else %}false{% endif %}"
       aria-controls="one-time-purchase"
       data-tab="one-time"
       type="button"
     >
       One-Time Purchase
     </button>
+    {%- endunless -%}
     <button
-      class="purchase-tab"
+      class="purchase-tab {% if product.requires_selling_plan or current_selected_option != '' %}active{% endif %}"
       role="tab"
-      aria-selected="false"
+      aria-selected="{% if product.requires_selling_plan or current_selected_option != '' %}true{% else %}false{% endif %}"
       aria-controls="subscription-purchase"
       data-tab="subscription"
       type="button"
@@ -146,9 +299,10 @@
     </button>
   </div>
 
+  {%- unless product.requires_selling_plan -%}
   <div
     id="one-time-purchase"
-    class="purchase-tab-content active"
+    class="purchase-tab-content {% if current_selected_option == '' %}active{% endif %}"
     role="tabpanel"
     data-content="one-time"
   >
@@ -158,14 +312,25 @@
         Purchase this product once at the regular price.
       </p>
       <div class="purchase-option-price">
-        {{ product.selected_or_first_available_variant.price | money }}
+        {{ offer.price | money }}
       </div>
+      <input type="radio"
+        name="purchase-option"
+        id="purchase-option-onetime"
+        class="visually-hidden"
+        data-purchase-type="one-time"
+        data-variant-id="{{ current_variant.id }}"
+        data-compare-price="{{ offer.compare_at_price | money }}"
+        data-final-price="{{ offer.price | money }}"
+        {% if current_selected_option == '' %}checked="checked"{% endif %}
+      />
     </div>
   </div>
+  {%- endunless -%}
 
   <div
     id="subscription-purchase"
-    class="purchase-tab-content"
+    class="purchase-tab-content {% if product.requires_selling_plan or current_selected_option != '' %}active{% endif %}"
     role="tabpanel"
     data-content="subscription"
   >
@@ -175,126 +340,254 @@
         Never run out! Get this product delivered regularly and save.
       </p>
 
-      {%- liquid
-        assign subscription_discount = 10
-        assign subscription_price = product.selected_or_first_available_variant.price | times: 0.9
-      -%}
-
-      <div class="purchase-option-price">
-        {{ subscription_price | money }}
-        <span class="purchase-option-savings">Save {{ subscription_discount }}%</span>
+      {%- if subsarray.size > 0 -%}
+      <div class="subscription-options-list">
+        {%- assign optnum = 1 -%}
+        {%- for subopt in subsarray -%}
+          {%- assign subdata = subopt | split: "||" -%}
+          <div class="subscription-option-item {% if product.requires_selling_plan and optnum == 1 %}selected{% elsif current_selected_option == current_variant.id %}selected{% endif %}">
+            <input type="radio"
+              name="purchase-option"
+              id="purchase-option-sub-{{ optnum }}"
+              class="visually-hidden"
+              data-purchase-type="subscription"
+              data-variant-id="{{ subdata[1] }}"
+              data-selling-plan-id="{{ subdata[2] }}"
+              data-compare-price="{{ subdata[6] | money }}"
+              data-final-price="{{ subdata[7] | money }}"
+              data-savings="{{ subdata[5] | money }}"
+              {%- if product.requires_selling_plan -%}
+                {%- if optnum == 1 -%}
+                  checked="checked"
+                {%- endif -%}
+              {% elsif current_selected_option == current_variant.id %}checked="checked"
+              {%- endif -%}
+            />
+            <label for="purchase-option-sub-{{ optnum }}" class="subscription-option-label">
+              <div>
+                <div class="subscription-option-name">{{ subdata[3] }}</div>
+                {%- if subdata[9] != blank -%}
+                <div class="subscription-option-overview">{{ subdata[9] }}</div>
+                {%- endif -%}
+              </div>
+              <div class="purchase-option-price">
+                {{ subdata[7] | money }}
+                {%- if subdata[5] != blank and subdata[5] != '0' -%}
+                <span class="purchase-option-savings">Save {{ subdata[5] | money }}</span>
+                {%- endif -%}
+              </div>
+            </label>
+          </div>
+          {%- assign optnum = optnum | plus: 1 -%}
+        {%- endfor -%}
       </div>
-
-      <div class="subscription-frequency">
-        <label for="subscription-frequency-{{ section.id }}">Delivery Frequency</label>
-        <select id="subscription-frequency-{{ section.id }}" name="subscription_frequency">
-          <option value="30">Every 30 days</option>
-          <option value="60">Every 60 days</option>
-          <option value="90">Every 90 days</option>
-        </select>
-      </div>
-
-      {%- comment -%}
-        Recharge subscription widget will be injected here
-        The Recharge app will automatically detect and populate this container
-      {%- endcomment -%}
-      <div class="recharge-subscription-widget" data-recharge-widget></div>
+      {%- else -%}
+      <p>No subscription options available for this product.</p>
+      {%- endif -%}
     </div>
   </div>
 </div>
 
 <script>
-  if (!customElements.get('purchase-options-tabs')) {
-    class PurchaseOptionsTabs extends HTMLElement {
-      constructor() {
-        super();
-        this.tabs = this.querySelectorAll('.purchase-tab');
-        this.contents = this.querySelectorAll('.purchase-tab-content');
-        this.init();
+document.addEventListener('DOMContentLoaded', () => {
+  const purchaseTabsContainer = document.querySelector('.purchase-options-tabs');
+  if (!purchaseTabsContainer) return;
+
+  const sectionId = purchaseTabsContainer.dataset.sectionId;
+  const productAddForm = document.querySelector(`FORM#product-form-${sectionId}`);
+  const priceField = document.querySelector(`.price-${sectionId}`);
+  const qtyField = document.querySelector(`#Quantity-${sectionId}`);
+  const tabs = purchaseTabsContainer.querySelectorAll('.purchase-tab');
+  const contents = purchaseTabsContainer.querySelectorAll('.purchase-tab-content');
+  const allOptions = purchaseTabsContainer.querySelectorAll('input[name="purchase-option"]');
+  const subscriptionItems = purchaseTabsContainer.querySelectorAll('.subscription-option-item');
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab));
+  });
+
+  function switchTab(selectedTab) {
+    const tabType = selectedTab.dataset.tab;
+
+    // Update tabs
+    tabs.forEach(tab => {
+      const isSelected = tab === selectedTab;
+      tab.classList.toggle('active', isSelected);
+      tab.setAttribute('aria-selected', isSelected);
+    });
+
+    // Update content
+    contents.forEach(content => {
+      const isActive = content.dataset.content === tabType;
+      content.classList.toggle('active', isActive);
+    });
+
+    // Select the appropriate radio option when switching tabs
+    if (tabType === 'one-time') {
+      const oneTimeOption = purchaseTabsContainer.querySelector('input[data-purchase-type="one-time"]');
+      if (oneTimeOption) {
+        oneTimeOption.checked = true;
+        updateForm();
+        updatePrice();
       }
-
-      init() {
-        this.tabs.forEach(tab => {
-          tab.addEventListener('click', () => this.switchTab(tab));
-        });
-
-        // Listen for variant changes to update prices
-        document.addEventListener('variant:change', (event) => {
-          this.updatePrices(event.detail.variant);
-        });
-      }
-
-      switchTab(selectedTab) {
-        const tabType = selectedTab.dataset.tab;
-
-        // Update tabs
-        this.tabs.forEach(tab => {
-          const isSelected = tab === selectedTab;
-          tab.classList.toggle('active', isSelected);
-          tab.setAttribute('aria-selected', isSelected);
-        });
-
-        // Update content
-        this.contents.forEach(content => {
-          const isActive = content.dataset.content === tabType;
-          content.classList.toggle('active', isActive);
-        });
-
-        // Update hidden input for purchase type (for Recharge integration)
-        this.updatePurchaseType(tabType);
-      }
-
-      updatePurchaseType(type) {
-        // Find or create hidden input for purchase type
-        const form = this.closest('form') || document.querySelector('form[data-type="add-to-cart-form"]');
-        if (!form) return;
-
-        let input = form.querySelector('input[name="purchase_type"]');
-        if (!input) {
-          input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'purchase_type';
-          form.appendChild(input);
-        }
-
-        input.value = type === 'subscription' ? 'autodeliver' : 'onetime';
-
-        // Dispatch event for Recharge or other integrations
-        document.dispatchEvent(new CustomEvent('purchase-type:change', {
-          detail: { type: type }
-        }));
-      }
-
-      updatePrices(variant) {
-        if (!variant) return;
-
-        const oneTimePrice = this.querySelector('[data-content="one-time"] .purchase-option-price');
-        const subscriptionPrice = this.querySelector('[data-content="subscription"] .purchase-option-price');
-
-        if (oneTimePrice) {
-          oneTimePrice.innerHTML = Shopify.formatMoney(variant.price, window.theme.moneyFormat || '{{amount}}');
-        }
-
-        if (subscriptionPrice) {
-          const discountedPrice = Math.round(variant.price * 0.9);
-          subscriptionPrice.innerHTML = `
-            ${Shopify.formatMoney(discountedPrice, window.theme.moneyFormat || '{{amount}}')}
-            <span class="purchase-option-savings">Save 10%</span>
-          `;
-        }
+    } else if (tabType === 'subscription') {
+      const firstSubOption = purchaseTabsContainer.querySelector('input[data-purchase-type="subscription"]');
+      if (firstSubOption) {
+        firstSubOption.checked = true;
+        updateForm();
+        updatePrice();
       }
     }
-
-    customElements.define('purchase-options-tabs', PurchaseOptionsTabs);
   }
 
-  // Initialize the component
-  document.addEventListener('DOMContentLoaded', () => {
-    const purchaseOptions = document.querySelector('.purchase-options-tabs');
-    if (purchaseOptions && !purchaseOptions.closest('purchase-options-tabs')) {
-      const wrapper = document.createElement('purchase-options-tabs');
-      purchaseOptions.parentNode.insertBefore(wrapper, purchaseOptions);
-      wrapper.appendChild(purchaseOptions);
+  // Handle radio option changes
+  allOptions.forEach(option => {
+    option.addEventListener('change', (e) => {
+      updateForm();
+      updatePrice();
+
+      // Update visual selection state for subscription items
+      subscriptionItems.forEach(item => {
+        const radio = item.querySelector('input[type="radio"]');
+        if (radio.checked) {
+          item.classList.add('selected');
+        } else {
+          item.classList.remove('selected');
+        }
+      });
+    });
+  });
+
+  // Handle subscription item clicks
+  subscriptionItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      // Don't trigger if clicking the label directly (it will handle the radio)
+      if (e.target.tagName === 'LABEL' || e.target.closest('label')) return;
+
+      const radio = item.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+
+  function updatePrice() {
+    const optSel = purchaseTabsContainer.querySelector('input[name="purchase-option"]:checked');
+    if (!optSel || !priceField) return;
+
+    const comparePrice = optSel.dataset.comparePrice;
+    const finalPrice = optSel.dataset.finalPrice;
+    const savings = optSel.dataset.savings;
+
+    const priceDetails = priceField.querySelector('.price-item__details');
+    const savingsElement = priceField.querySelector('.price-item__savings');
+
+    // Update price in the add to cart button
+    if (productAddForm) {
+      const productFormPrice = productAddForm.querySelector('SPAN.product-form__price');
+      if (productFormPrice) {
+        productFormPrice.textContent = `- ${finalPrice}`;
+      }
+    }
+
+    if (comparePrice !== undefined && finalPrice !== undefined) {
+      if (comparePrice !== finalPrice && comparePrice !== '') {
+        priceField.classList.add('price--on-sale');
+        const saleBadge = priceField.querySelector('.price__badge-sale');
+        if (saleBadge) saleBadge.style.display = 'none';
+
+        const salePrice = priceField.querySelector('.price-item--sale');
+        if (salePrice) salePrice.textContent = finalPrice;
+
+        priceField.querySelectorAll('.price-item--regular').forEach(element => {
+          element.textContent = comparePrice;
+        });
+
+        if (savingsElement) {
+          savingsElement.textContent = "";
+          if (savings && savings !== '$0.00' && savings !== '£0.00') {
+            savingsElement.textContent = `SAVE ${savings}`;
+
+            if (priceDetails) {
+              priceDetails.textContent = '*Subscribe to SAVE on every single order!';
+            }
+          } else {
+            if (priceDetails) {
+              priceDetails.textContent = "";
+            }
+          }
+        }
+      } else {
+        priceField.classList.remove('price--on-sale');
+        priceField.querySelectorAll('.price-item--regular').forEach(element => {
+          element.textContent = finalPrice;
+        });
+
+        if (priceDetails) {
+          priceDetails.textContent = '';
+        }
+        if (savingsElement) {
+          savingsElement.textContent = '';
+        }
+      }
+    }
+  }
+
+  function updateForm() {
+    if (!productAddForm) return;
+
+    const optSel = purchaseTabsContainer.querySelector('input[name="purchase-option"]:checked');
+    if (!optSel) return;
+
+    const variantIdInput = productAddForm.querySelector('INPUT[name="id"]');
+    if (variantIdInput) {
+      variantIdInput.value = optSel.dataset.variantId;
+    }
+
+    // Remove the old selling_plan (if it exists)
+    const sellingPlanInput = productAddForm.querySelector('INPUT[name="selling_plan"]');
+    if (sellingPlanInput) {
+      sellingPlanInput.remove();
+    }
+
+    const sellingPlanId = optSel.dataset.sellingPlanId;
+    const purchaseType = optSel.dataset.purchaseType;
+
+    if (purchaseType === 'subscription' && sellingPlanId) {
+      const productOptions = productAddForm.querySelector('DIV.product-options');
+      if (productOptions) {
+        productOptions.insertAdjacentHTML('beforeend', `<input name="selling_plan" value="${sellingPlanId}" type="hidden">`);
+      }
+
+      // Hide payment options for subscriptions
+      document.querySelectorAll('klarna-placement, afterpay-placement, square-placement').forEach(el => el.classList.add('hidden'));
+    } else {
+      // Show payment options for one-time purchases
+      document.querySelectorAll('klarna-placement, afterpay-placement, square-placement').forEach(el => el.classList.remove('hidden'));
+    }
+
+    // Dispatch event for other integrations
+    document.dispatchEvent(new CustomEvent('purchase-type:change', {
+      detail: {
+        type: purchaseType,
+        variantId: optSel.dataset.variantId,
+        sellingPlanId: sellingPlanId
+      }
+    }));
+  }
+
+  // Initialize price and form based on currently selected option
+  updatePrice();
+  updateForm();
+
+  // Set initial selected state for subscription items
+  subscriptionItems.forEach(item => {
+    const radio = item.querySelector('input[type="radio"]');
+    if (radio && radio.checked) {
+      item.classList.add('selected');
     }
   });
+});
 </script>
