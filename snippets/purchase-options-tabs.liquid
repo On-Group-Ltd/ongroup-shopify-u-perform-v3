@@ -393,24 +393,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updatePrice() {
     const optSel = purchaseTabsContainer.querySelector('input[name="purchase-option"]:checked');
-    if (!optSel || !priceField) return;
+    if (!optSel) return;
 
     const comparePrice = optSel.dataset.comparePrice;
     const finalPrice = optSel.dataset.finalPrice;
     const savings = optSel.dataset.savings;
 
-    const priceDetails = priceField.querySelector('.price-item__details');
-    const savingsElement = priceField.querySelector('.price-item__savings');
+    const priceDetails = priceField ? priceField.querySelector('.price-item__details') : null;
+    const savingsElement = priceField ? priceField.querySelector('.price-item__savings') : null;
 
     // Update price in the add to cart button
-    if (productAddForm) {
-      const productFormPrice = productAddForm.querySelector('SPAN.product-form__price');
-      if (productFormPrice) {
-        productFormPrice.textContent = `- ${finalPrice}`;
+    const addToCartButton = document.querySelector(`#ProductSubmitButton-${sectionId}`);
+    if (addToCartButton) {
+      const buttonSpan = addToCartButton.querySelector('span');
+      if (buttonSpan) {
+        const addToCartText = buttonSpan.textContent.split(' - ')[0].trim();
+        buttonSpan.textContent = `${addToCartText} - ${finalPrice}`;
       }
     }
 
-    if (comparePrice !== undefined && finalPrice !== undefined) {
+    // Update price display area if it exists
+    if (priceField && comparePrice !== undefined && finalPrice !== undefined) {
       if (comparePrice !== finalPrice && comparePrice !== '') {
         priceField.classList.add('price--on-sale');
         const saleBadge = priceField.querySelector('.price__badge-sale');
