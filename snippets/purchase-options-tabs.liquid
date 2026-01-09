@@ -273,6 +273,17 @@
   }
 </style>
 
+{%- liquid
+  assign subscription_tab_title = 'Subscribe & Save'
+  if subsarray.size > 0
+    assign first_subopt = subsarray | first
+    assign first_subdata = first_subopt | split: "||"
+    if first_subdata[3] != blank
+      assign subscription_tab_title = first_subdata[3]
+    endif
+  endif
+-%}
+
 <div class="purchase-options-tabs" {{ block.shopify_attributes }} data-section-id="{{ section.id }}">
   <div class="purchase-tabs" role="tablist">
     {%- unless product.requires_selling_plan -%}
@@ -295,7 +306,7 @@
       data-tab="subscription"
       type="button"
     >
-      Subscribe & Save
+      {{ subscription_tab_title }}
     </button>
   </div>
 
