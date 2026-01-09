@@ -488,6 +488,7 @@
                   show_pickup_availability: true
                 -%}
               {%- when 'custom_product_info_row' -%}
+                {%- render 'purchase-options-tabs', product: product, block: block -%}
                 <div {{ block.shopify_attributes }}>
                   {%- render 'custom-product-info-row',
                     product: product,
