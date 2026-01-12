@@ -1,6 +1,6 @@
 {% comment %}
   Renders purchase options tabs for one-time purchase and subscription.
-  Integrates with Recharge Subscriptions.
+  Integrates with Recharge Subscriptions via selling plans.
 
   Accepts:
   - product: {Object} product object.
@@ -8,7 +8,109 @@
 
   Usage:
   {% render 'purchase-options-tabs', product: product %}
+
+  Based on og-recharge-widget-v3.liquid logic
 {% endcomment %}
+
+{% assign debugMode = false %}
+{% assign showPriceSavingNotPerc = true %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+  assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+  if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+    assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+  endif
+  assign offer = current_selling_plan_allocation | default: current_variant
+-%}
+
+{% comment %}Build subscription options array{% endcomment %}
+{% capture subslist %}
+{%- for selling_plan_group in product.selling_plan_groups -%}
+{%- for selling_plan in selling_plan_group.selling_plans -%}
+    {%- liquid
+        assign subdiscount = selling_plan.price_adjustments[0]
+        assign is_discounted = false
+          if subdiscount.value > 0
+              assign is_discounted = true
+          endif
+        assign subprice = current_variant.selling_plan_allocations[0]
+        assign sortid = 1000000 | plus: subprice.price
+
+        assign subsaving = selling_plan.price_adjustments[0].value
+        if showPriceSavingNotPerc
+            assign subsaving = subprice.compare_at_price | minus: subprice.price
+        endif
+
+        assign selling_plan_name = selling_plan.name
+        if product.metafields.info.subscription_description != blank
+          assign selling_plan_name = product.metafields.info.subscription_description
+        endif
+
+        assign sub_product_overview = ''
+        if product.metafields.info.subscription_overview != blank
+          assign sub_product_overview = product.metafields.info.subscription_overview
+        endif
+    -%}
+{{ sortid }}||{{ current_variant.id }}||{{ selling_plan.id }}||{{ selling_plan_name }}||||{{ subsaving }}||{{ subprice.compare_at_price }}||{{ subprice.price }}||{{ product.id }}||{{ sub_product_overview }} ::
+{%- endfor -%}
+{%- endfor -%}
+{%- assign subProductHandles =  product.metafields.info.subscription_products | split:'|' -%}
+{%- for subProdHandle in subProductHandles -%}
+{%- liquid
+  assign subex_product = all_products[subProdHandle]
+  assign subex_variant = subex_product.selected_or_first_available_variant | default: subex_product.variants.first
+  assign subprice = subex_variant.selling_plan_allocations[0]
+-%}
+
+    {%- for selling_plan_group in subex_product.selling_plan_groups -%}
+        {%- for selling_plan in selling_plan_group.selling_plans -%}
+            {%- liquid
+                assign subdiscount = selling_plan.price_adjustments[0]
+                assign is_discounted = false
+                      if subdiscount.value > 0
+                      assign is_discounted = true
+                  endif
+                assign subprice = subex_variant.selling_plan_allocations[0]
+
+                assign calcprice = subprice
+                assign calcdiscount = selling_plan.price_adjustments[0].value
+                if subex_product.requires_selling_plan
+                    assign calcprice = subex_variant
+                    assign calcdiscount = calcprice.compare_at_price | minus: calcprice.price | times: 100.0 | divided_by: calcprice.compare_at_price | money_without_currency | times: 100 | remove: '.0'
+                endif
+
+                assign subsaving = calcdiscount
+                if showPriceSavingNotPerc
+                    assign subsaving = calcprice.compare_at_price | minus: calcprice.price
+                endif
+
+                assign sortid = 1000000 | plus: calcprice.price
+
+                assign selling_plan_name = selling_plan.name
+                if subex_product.metafields.info.subscription_description != blank
+                  assign selling_plan_name = subex_product.metafields.info.subscription_description
+                endif
+
+                assign subex_product_overview = ''
+                if subex_product.metafields.info.subscription_overview != blank
+                  assign subex_product_overview = subex_product.metafields.info.subscription_overview
+                endif
+            -%}
+{{ sortid }}||{{ subex_variant.id }}||{{ selling_plan.id }}||{{ selling_plan_name }}||{{ subex_product.description | strip | strip_html | truncate: 250 }}||{{ subsaving }}||{{ calcprice.compare_at_price }}||{{ calcprice.price }}||{{ subex_product.id }}||{{ subex_product_overview }} ::
+        {%- endfor -%}
+    {%- endfor -%}
+{%- endfor -%}
+{% endcapture %}
+{% assign subsarray = subslist | strip_newlines | split: '::' | sort %}
+
+{%- liquid
+  assign current_selected_option = ''
+  if product.metafields.info.preselected_product_variant != blank
+    assign current_selected_option = product.metafields.info.preselected_product_variant | split: ':' | last | plus: 0
+  endif
+  assign subsarray = subsarray | reverse
+-%}
 
 <style>
   .purchase-options-tabs {
@@ -122,33 +224,44 @@
   }
 </style>
 
-<div class="purchase-options-tabs" {{ block.shopify_attributes }}>
+<div class="purchase-options-tabs" {{ block.shopify_attributes }} data-section-id="{{ section.id }}">
   <div class="purchase-tabs" role="tablist">
+    {%- unless product.requires_selling_plan -%}
     <button
-      class="purchase-tab active"
+      class="purchase-tab {% if current_selected_option == '' %}active{% endif %}"
       role="tab"
-      aria-selected="true"
+      aria-selected="{% if current_selected_option == '' %}true{% else %}false{% endif %}"
       aria-controls="one-time-purchase"
       data-tab="one-time"
       type="button"
     >
       One-Time Purchase
     </button>
-    <button
-      class="purchase-tab"
-      role="tab"
-      aria-selected="false"
-      aria-controls="subscription-purchase"
-      data-tab="subscription"
-      type="button"
-    >
-      Subscribe & Save
-    </button>
+    {%- endunless -%}
+
+    {%- if subsarray.size > 0 -%}
+      {%- assign optnum = 1 -%}
+      {%- for subopt in subsarray -%}
+        {%- assign subdata = subopt | split: "||" -%}
+        <button
+          class="purchase-tab {% if product.requires_selling_plan and optnum == 1 %}active{% elsif current_selected_option == current_variant.id %}active{% endif %}"
+          role="tab"
+          aria-selected="{% if product.requires_selling_plan and optnum == 1 %}true{% elsif current_selected_option == current_variant.id %}true{% else %}false{% endif %}"
+          aria-controls="subscription-{{ optnum }}"
+          data-tab="subscription-{{ optnum }}"
+          type="button"
+        >
+          {{ subdata[3] }}
+        </button>
+        {%- assign optnum = optnum | plus: 1 -%}
+      {%- endfor -%}
+    {%- endif -%}
   </div>
 
+  {%- unless product.requires_selling_plan -%}
   <div
     id="one-time-purchase"
-    class="purchase-tab-content active"
+    class="purchase-tab-content {% if current_selected_option == '' %}active{% endif %}"
     role="tabpanel"
     data-content="one-time"
   >
@@ -158,143 +271,260 @@
         Purchase this product once at the regular price.
       </p>
       <div class="purchase-option-price">
-        {{ product.selected_or_first_available_variant.price | money }}
+        {{ offer.price | money }}
       </div>
+      <input type="radio"
+        name="purchase-option"
+        id="purchase-option-onetime"
+        class="visually-hidden"
+        data-purchase-type="one-time"
+        data-variant-id="{{ current_variant.id }}"
+        data-compare-price="{{ offer.compare_at_price | money }}"
+        data-final-price="{{ offer.price | money }}"
+        {% if current_selected_option == '' %}checked="checked"{% endif %}
+      />
     </div>
   </div>
+  {%- endunless -%}
 
-  <div
-    id="subscription-purchase"
-    class="purchase-tab-content"
-    role="tabpanel"
-    data-content="subscription"
-  >
-    <div class="purchase-option-details">
-      <h3 class="purchase-option-title">Subscribe & Save</h3>
-      <p class="purchase-option-description">
-        Never run out! Get this product delivered regularly and save.
-      </p>
-
-      {%- liquid
-        assign subscription_discount = 10
-        assign subscription_price = product.selected_or_first_available_variant.price | times: 0.9
-      -%}
-
-      <div class="purchase-option-price">
-        {{ subscription_price | money }}
-        <span class="purchase-option-savings">Save {{ subscription_discount }}%</span>
+  {%- if subsarray.size > 0 -%}
+    {%- assign optnum = 1 -%}
+    {%- for subopt in subsarray -%}
+      {%- assign subdata = subopt | split: "||" -%}
+      <div
+        id="subscription-{{ optnum }}"
+        class="purchase-tab-content {% if product.requires_selling_plan and optnum == 1 %}active{% elsif current_selected_option == current_variant.id %}active{% endif %}"
+        role="tabpanel"
+        data-content="subscription-{{ optnum }}"
+      >
+        <div class="purchase-option-details">
+          <h3 class="purchase-option-title">{{ subdata[3] }}</h3>
+          {%- if subdata[9] != blank -%}
+          <p class="purchase-option-description">
+            {{ subdata[9] }}
+          </p>
+          {%- else -%}
+          <p class="purchase-option-description">
+            Never run out! Get this product delivered regularly and save.
+          </p>
+          {%- endif -%}
+          <div class="purchase-option-price">
+            {{ subdata[7] | money }}
+            {%- if subdata[5] != blank and subdata[5] != '0' -%}
+            <span class="purchase-option-savings">Save {{ subdata[5] | money }}</span>
+            {%- endif -%}
+          </div>
+          <input type="radio"
+            name="purchase-option"
+            id="purchase-option-sub-{{ optnum }}"
+            class="visually-hidden"
+            data-purchase-type="subscription"
+            data-variant-id="{{ subdata[1] }}"
+            data-selling-plan-id="{{ subdata[2] }}"
+            data-compare-price="{{ subdata[6] | money }}"
+            data-final-price="{{ subdata[7] | money }}"
+            data-savings="{{ subdata[5] | money }}"
+            {%- if product.requires_selling_plan -%}
+              {%- if optnum == 1 -%}
+                checked="checked"
+              {%- endif -%}
+            {% elsif current_selected_option == current_variant.id %}checked="checked"
+            {%- endif -%}
+          />
+        </div>
       </div>
-
-      <div class="subscription-frequency">
-        <label for="subscription-frequency-{{ section.id }}">Delivery Frequency</label>
-        <select id="subscription-frequency-{{ section.id }}" name="subscription_frequency">
-          <option value="30">Every 30 days</option>
-          <option value="60">Every 60 days</option>
-          <option value="90">Every 90 days</option>
-        </select>
-      </div>
-
-      {%- comment -%}
-        Recharge subscription widget will be injected here
-        The Recharge app will automatically detect and populate this container
-      {%- endcomment -%}
-      <div class="recharge-subscription-widget" data-recharge-widget></div>
-    </div>
-  </div>
+      {%- assign optnum = optnum | plus: 1 -%}
+    {%- endfor -%}
+  {%- endif -%}
 </div>
 
 <script>
-  if (!customElements.get('purchase-options-tabs')) {
-    class PurchaseOptionsTabs extends HTMLElement {
-      constructor() {
-        super();
-        this.tabs = this.querySelectorAll('.purchase-tab');
-        this.contents = this.querySelectorAll('.purchase-tab-content');
-        this.init();
-      }
+document.addEventListener('DOMContentLoaded', () => {
+  const purchaseTabsContainer = document.querySelector('.purchase-options-tabs');
+  if (!purchaseTabsContainer) return;
 
-      init() {
-        this.tabs.forEach(tab => {
-          tab.addEventListener('click', () => this.switchTab(tab));
-        });
+  const sectionId = purchaseTabsContainer.dataset.sectionId;
+  let productAddForm = document.querySelector(`FORM#product-form-${sectionId}`);
 
-        // Listen for variant changes to update prices
-        document.addEventListener('variant:change', (event) => {
-          this.updatePrices(event.detail.variant);
-        });
-      }
-
-      switchTab(selectedTab) {
-        const tabType = selectedTab.dataset.tab;
-
-        // Update tabs
-        this.tabs.forEach(tab => {
-          const isSelected = tab === selectedTab;
-          tab.classList.toggle('active', isSelected);
-          tab.setAttribute('aria-selected', isSelected);
-        });
-
-        // Update content
-        this.contents.forEach(content => {
-          const isActive = content.dataset.content === tabType;
-          content.classList.toggle('active', isActive);
-        });
-
-        // Update hidden input for purchase type (for Recharge integration)
-        this.updatePurchaseType(tabType);
-      }
-
-      updatePurchaseType(type) {
-        // Find or create hidden input for purchase type
-        const form = this.closest('form') || document.querySelector('form[data-type="add-to-cart-form"]');
-        if (!form) return;
-
-        let input = form.querySelector('input[name="purchase_type"]');
-        if (!input) {
-          input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'purchase_type';
-          form.appendChild(input);
-        }
-
-        input.value = type === 'subscription' ? 'autodeliver' : 'onetime';
-
-        // Dispatch event for Recharge or other integrations
-        document.dispatchEvent(new CustomEvent('purchase-type:change', {
-          detail: { type: type }
-        }));
-      }
-
-      updatePrices(variant) {
-        if (!variant) return;
-
-        const oneTimePrice = this.querySelector('[data-content="one-time"] .purchase-option-price');
-        const subscriptionPrice = this.querySelector('[data-content="subscription"] .purchase-option-price');
-
-        if (oneTimePrice) {
-          oneTimePrice.innerHTML = Shopify.formatMoney(variant.price, window.theme.moneyFormat || '{{amount}}');
-        }
-
-        if (subscriptionPrice) {
-          const discountedPrice = Math.round(variant.price * 0.9);
-          subscriptionPrice.innerHTML = `
-            ${Shopify.formatMoney(discountedPrice, window.theme.moneyFormat || '{{amount}}')}
-            <span class="purchase-option-savings">Save 10%</span>
-          `;
-        }
-      }
-    }
-
-    customElements.define('purchase-options-tabs', PurchaseOptionsTabs);
+  // Fallback: try to find any product form if the specific one isn't found
+  if (!productAddForm) {
+    productAddForm = document.querySelector('form[data-type="add-to-cart-form"]');
   }
 
-  // Initialize the component
-  document.addEventListener('DOMContentLoaded', () => {
-    const purchaseOptions = document.querySelector('.purchase-options-tabs');
-    if (purchaseOptions && !purchaseOptions.closest('purchase-options-tabs')) {
-      const wrapper = document.createElement('purchase-options-tabs');
-      purchaseOptions.parentNode.insertBefore(wrapper, purchaseOptions);
-      wrapper.appendChild(purchaseOptions);
-    }
+  const priceField = document.querySelector(`.price-${sectionId}`);
+  const qtyField = document.querySelector(`#Quantity-${sectionId}`);
+  const tabs = purchaseTabsContainer.querySelectorAll('.purchase-tab');
+  const contents = purchaseTabsContainer.querySelectorAll('.purchase-tab-content');
+  const allOptions = purchaseTabsContainer.querySelectorAll('input[name="purchase-option"]');
+
+  console.log('Form found:', productAddForm);
+  console.log('Section ID:', sectionId);
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab));
   });
+
+  function switchTab(selectedTab) {
+    const tabType = selectedTab.dataset.tab;
+
+    // Update tabs
+    tabs.forEach(tab => {
+      const isSelected = tab === selectedTab;
+      tab.classList.toggle('active', isSelected);
+      tab.setAttribute('aria-selected', isSelected);
+    });
+
+    // Update content
+    contents.forEach(content => {
+      const isActive = content.dataset.content === tabType;
+      content.classList.toggle('active', isActive);
+    });
+
+    // Select the radio option for the active tab
+    const activeContent = purchaseTabsContainer.querySelector(`[data-content="${tabType}"]`);
+    if (activeContent) {
+      const radioOption = activeContent.querySelector('input[name="purchase-option"]');
+      if (radioOption) {
+        radioOption.checked = true;
+        updateForm();
+        updatePrice();
+      }
+    }
+  }
+
+  // Handle radio option changes
+  allOptions.forEach(option => {
+    option.addEventListener('change', (e) => {
+      updateForm();
+      updatePrice();
+    });
+  });
+
+  function updatePrice() {
+    const optSel = purchaseTabsContainer.querySelector('input[name="purchase-option"]:checked');
+    if (!optSel) return;
+
+    const comparePrice = optSel.dataset.comparePrice;
+    const finalPrice = optSel.dataset.finalPrice;
+    const savings = optSel.dataset.savings;
+
+    const priceDetails = priceField ? priceField.querySelector('.price-item__details') : null;
+    const savingsElement = priceField ? priceField.querySelector('.price-item__savings') : null;
+
+    // Update price in the add to cart button
+    // Handle standard ProductSubmitButton
+    const addToCartButton = document.querySelector(`#ProductSubmitButton-${sectionId}`);
+    if (addToCartButton) {
+      const buttonSpan = addToCartButton.querySelector('span');
+      if (buttonSpan) {
+        const addToCartText = buttonSpan.textContent.split(' - ')[0].trim();
+        buttonSpan.textContent = `${addToCartText} - ${finalPrice}`;
+      }
+    }
+
+    // Handle CustomProductSubmit button
+    const customAddToCartButton = document.querySelector(`#CustomProductSubmit-${sectionId}`);
+    if (customAddToCartButton) {
+      const buttonPriceSpan = customAddToCartButton.querySelector('.button-price');
+      if (buttonPriceSpan) {
+        buttonPriceSpan.textContent = finalPrice;
+      }
+    }
+
+    // Update price display area if it exists
+    if (priceField && comparePrice !== undefined && finalPrice !== undefined) {
+      if (comparePrice !== finalPrice && comparePrice !== '') {
+        priceField.classList.add('price--on-sale');
+        const saleBadge = priceField.querySelector('.price__badge-sale');
+        if (saleBadge) saleBadge.style.display = 'none';
+
+        const salePrice = priceField.querySelector('.price-item--sale');
+        if (salePrice) salePrice.textContent = finalPrice;
+
+        priceField.querySelectorAll('.price-item--regular').forEach(element => {
+          element.textContent = comparePrice;
+        });
+
+        if (savingsElement) {
+          savingsElement.textContent = "";
+          if (savings && savings !== '$0.00' && savings !== '£0.00') {
+            savingsElement.textContent = `SAVE ${savings}`;
+
+            if (priceDetails) {
+              priceDetails.textContent = '*Subscribe to SAVE on every single order!';
+            }
+          } else {
+            if (priceDetails) {
+              priceDetails.textContent = "";
+            }
+          }
+        }
+      } else {
+        priceField.classList.remove('price--on-sale');
+        priceField.querySelectorAll('.price-item--regular').forEach(element => {
+          element.textContent = finalPrice;
+        });
+
+        if (priceDetails) {
+          priceDetails.textContent = '';
+        }
+        if (savingsElement) {
+          savingsElement.textContent = '';
+        }
+      }
+    }
+  }
+
+  function updateForm() {
+    if (!productAddForm) return;
+
+    const optSel = purchaseTabsContainer.querySelector('input[name="purchase-option"]:checked');
+    if (!optSel) return;
+
+    const variantIdInput = productAddForm.querySelector('INPUT[name="id"]');
+    if (variantIdInput) {
+      variantIdInput.value = optSel.dataset.variantId;
+    }
+
+    // Remove the old selling_plan (if it exists)
+    const sellingPlanInput = productAddForm.querySelector('INPUT[name="selling_plan"]');
+    if (sellingPlanInput) {
+      sellingPlanInput.remove();
+    }
+
+    const sellingPlanId = optSel.dataset.sellingPlanId;
+    const purchaseType = optSel.dataset.purchaseType;
+
+    if (purchaseType === 'subscription' && sellingPlanId) {
+      // Add selling_plan directly to the form
+      const newSellingPlanInput = document.createElement('input');
+      newSellingPlanInput.type = 'hidden';
+      newSellingPlanInput.name = 'selling_plan';
+      newSellingPlanInput.value = sellingPlanId;
+      productAddForm.appendChild(newSellingPlanInput);
+
+      console.log('Added selling_plan to form:', sellingPlanId);
+
+      // Hide payment options for subscriptions
+      document.querySelectorAll('klarna-placement, afterpay-placement, square-placement').forEach(el => el.classList.add('hidden'));
+    } else {
+      // Show payment options for one-time purchases
+      document.querySelectorAll('klarna-placement, afterpay-placement, square-placement').forEach(el => el.classList.remove('hidden'));
+    }
+
+    // Dispatch event for other integrations
+    document.dispatchEvent(new CustomEvent('purchase-type:change', {
+      detail: {
+        type: purchaseType,
+        variantId: optSel.dataset.variantId,
+        sellingPlanId: sellingPlanId
+      }
+    }));
+  }
+
+  // Initialize price and form based on currently selected option
+  updatePrice();
+  updateForm();
+});
 </script>
