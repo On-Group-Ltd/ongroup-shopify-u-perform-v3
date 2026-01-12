@@ -32,6 +32,10 @@
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
     }
 
+    .thumbnail__badge {
+      display: none;
+    }
+
     @media screen and (min-width: 750px) {
       .section-{{ section.id }}-padding {
         padding-top: {{ section.settings.padding_top }}px;
@@ -488,7 +492,9 @@
                   show_pickup_availability: true
                 -%}
               {%- when 'custom_product_info_row' -%}
-              {%- render 'purchase-options-tabs', product: product, block: block -%}
+
+                {%- render 'purchase-options-tabs', product: product, block: block -%}
+                
                 <div {{ block.shopify_attributes }}>
                   {%- render 'custom-product-info-row',
                     product: product,
