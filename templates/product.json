@@ -52,6 +52,39 @@
             "show_installment": true
           }
         },
+        "popup_tA9UAw": {
+          "type": "popup",
+          "settings": {
+            "icon_image": "shopify://shop_images/info-circle.png",
+            "title": "INGREDIENTS",
+            "text": "Nutritional Information",
+            "popup_title": "",
+            "custom_content": "",
+            "page": ""
+          }
+        },
+        "popup_gz4jQV": {
+          "type": "popup",
+          "settings": {
+            "icon_image": "shopify://shop_images/informed-sport.png",
+            "title": "100% APPROVED",
+            "text": "Informed Sports",
+            "popup_title": "",
+            "custom_content": "",
+            "page": ""
+          }
+        },
+        "popup_rDUqAr": {
+          "type": "popup",
+          "settings": {
+            "icon_image": "shopify://shop_images/question-circle.png",
+            "title": "DESCRIPTION",
+            "text": "In-Depth Product Information",
+            "popup_title": "",
+            "custom_content": "",
+            "page": ""
+          }
+        },
         "share": {
           "type": "share",
           "settings": {
@@ -67,6 +100,9 @@
         "description",
         "variant_picker",
         "custom_product_info_row_EfKX3F",
+        "popup_tA9UAw",
+        "popup_gz4jQV",
+        "popup_rDUqAr",
         "share"
       ],
       "settings": {
