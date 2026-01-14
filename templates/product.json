@@ -52,20 +52,6 @@
             "show_installment": true
           }
         },
-        "popup_7h8hek": {
-          "type": "popup",
-          "settings": {
-            "text": "Pop-up link text",
-            "page": ""
-          }
-        },
-        "popup_EGVqCU": {
-          "type": "popup",
-          "settings": {
-            "text": "Pop-up link text",
-            "page": ""
-          }
-        },
         "share": {
           "type": "share",
           "settings": {
@@ -81,8 +67,6 @@
         "description",
         "variant_picker",
         "custom_product_info_row_EfKX3F",
-        "popup_7h8hek",
-        "popup_EGVqCU",
         "share"
       ],
       "settings": {
