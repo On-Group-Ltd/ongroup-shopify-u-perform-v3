@@ -13,6 +13,14 @@ if (!customElements.get('product-modal')) {
       show(opener) {
         super.show(opener);
         this.showActiveMedia();
+
+        // Dispatch event with media ID for modal slider sync
+        const mediaId = opener ? opener.getAttribute('data-media-id') : null;
+        if (mediaId) {
+          this.dispatchEvent(new CustomEvent('modalOpened', {
+            detail: { mediaId: mediaId }
+          }));
+        }
       }
 
       showActiveMedia() {

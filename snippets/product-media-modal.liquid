@@ -121,6 +121,23 @@
 
         currentIndex = index;
 
+        // Pause all videos in inactive slides
+        slides.forEach(function(slide, i) {
+          if (i !== currentIndex) {
+            // Pause videos in inactive slides
+            const videos = slide.querySelectorAll('video');
+            videos.forEach(function(video) {
+              video.pause();
+            });
+
+            // Reset deferred media in inactive slides
+            const deferredMedias = slide.querySelectorAll('deferred-media');
+            deferredMedias.forEach(function(media) {
+              media.removeAttribute('loaded');
+            });
+          }
+        });
+
         // Update slides
         slides.forEach(function(slide, i) {
           if (i === currentIndex) {
@@ -205,6 +222,23 @@
       if (slides.length > 0) {
         showModalSlide(0);
       }
+
+      // Listen for modal open events to sync with the clicked media
+      modal.addEventListener('modalOpened', function(e) {
+        if (e.detail && e.detail.mediaId) {
+          const targetSlide = Array.from(slides).find(function(slide) {
+            const deferredMedia = slide.querySelector('[data-media-id="' + e.detail.mediaId + '"]');
+            return deferredMedia !== null;
+          });
+
+          if (targetSlide) {
+            const targetIndex = Array.from(slides).indexOf(targetSlide);
+            if (targetIndex !== -1) {
+              showModalSlide(targetIndex);
+            }
+          }
+        }
+      });
     }
 
     // Start initialization
