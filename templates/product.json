@@ -48,6 +48,8 @@
             "icon_image": "shopify://shop_images/info-circle.png",
             "title": "INGREDIENTS",
             "text": "Nutritional Information",
+            "use_acf_field": true,
+            "acf_field_key": "ingredients",
             "popup_title": "",
             "custom_content": "",
             "page": ""
@@ -59,6 +61,8 @@
             "icon_image": "shopify://shop_images/informed-sport.png",
             "title": "100% APPROVED",
             "text": "Informed Sports",
+            "use_acf_field": false,
+            "acf_field_key": "",
             "popup_title": "",
             "custom_content": "",
             "page": ""
@@ -70,6 +74,8 @@
             "icon_image": "shopify://shop_images/question-circle.png",
             "title": "DESCRIPTION",
             "text": "Product Information",
+            "use_acf_field": true,
+            "acf_field_key": "description",
             "popup_title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
             "custom_content": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac porta odio, et bibendum metus. Nullam eget accumsan ante, commodo hendrerit dui. Quisque congue, elit sollicitudin hendrerit bibendum, turpis quam ultrices urna, sed vestibulum felis diam in dui. Praesent tempor tincidunt diam non porta. Vivamus accumsan risus lorem, in accumsan nisl consequat et. Pellentesque tempor semper enim at rhoncus. Curabitur vel facilisis urna. Duis dictum, magna ac aliquet cursus, quam justo sodales ante, a dapibus turpis lectus in orci.</p><p>Etiam suscipit dui vel aliquam luctus. Nullam tellus urna, vehicula et aliquet at, iaculis quis neque. Phasellus eget neque nisi. Sed maximus libero ut ipsum dignissim dictum sit amet at odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum interdum est eget ligula finibus, eu viverra velit suscipit. Aliquam ultrices non quam sit amet pharetra. Vestibulum blandit cursus nulla, sit amet mattis felis ultrices sit amet. Aenean sagittis nisl et tortor tempor venenatis. Aliquam vel placerat massa, id suscipit nibh. Pellentesque vel nulla non mi molestie feugiat nec vitae sapien. Phasellus pharetra ipsum in urna eleifend rutrum. Proin lacinia magna nec lectus auctor elementum. Nunc euismod turpis sed molestie tristique.</p><p>Aliquam pellentesque tempus ligula. Donec in viverra magna, sit amet sodales tortor. Donec ac erat tellus. Proin laoreet mattis augue, a egestas neque dictum eget. Morbi pulvinar purus at velit gravida, vitae interdum turpis interdum. Nam semper gravida rutrum. Integer finibus diam quis pellentesque interdum. Maecenas ac massa a tortor scelerisque malesuada. Nunc ut leo nunc. Praesent molestie, nisi vel mollis blandit, nisi mauris commodo risus, eu elementum augue neque id urna. Etiam in ullamcorper urna. Sed a nunc condimentum, efficitur dui nec, mollis neque. Mauris volutpat urna ac egestas tincidunt. Phasellus ultrices felis id sem ultrices blandit sed vitae velit. Quisque aliquam rhoncus diam, non tempor lectus finibus ut. Mauris rutrum eget libero sit amet tempus.</p><p>Etiam tempor, leo id pretium lacinia, sapien lorem dictum lectus, eu aliquet justo risus et magna. Vivamus gravida mi vitae enim molestie posuere. Cras felis risus, ultrices sit amet interdum eu, bibendum ut turpis. Nunc consectetur augue vitae placerat pretium. Proin vulputate mi porta, sollicitudin sem convallis, fringilla augue. Donec vitae porttitor sem. Cras at ante ornare, aliquam nunc id, aliquet augue. Mauris non arcu nulla. In elementum malesuada leo a sollicitudin. Nunc ultrices, ante id hendrerit bibendum, metus libero vehicula nibh, ac aliquet metus urna ac lectus.</p><p>Pellentesque interdum nulla mi, sodales convallis libero interdum vel. Suspendisse congue libero id molestie lacinia. Fusce ullamcorper arcu et nisi rutrum, in vestibulum diam aliquet. Sed eu est sed sapien ultrices suscipit. Nullam bibendum venenatis varius. Cras vel arcu id nibh pretium aliquam. Phasellus feugiat nisi sit amet urna placerat, sit amet varius tortor tempor. Ut in erat vel quam consectetur semper id lacinia purus. Proin malesuada cursus ultrices. Sed sit amet leo a elit luctus imperdiet.</p>",
             "page": ""
