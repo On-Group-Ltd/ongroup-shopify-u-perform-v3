@@ -741,16 +741,27 @@
             {{- 'icon-close.svg' | inline_asset_content -}}
           </button>
           <div class="product-popup-modal__content-info">
-            {%- if block.settings.custom_content != blank -%}
-              {%- if block.settings.popup_title != blank -%}
-                <h1 class="h2">{{ block.settings.popup_title | escape }}</h1>
+            {%- if block.settings.use_acf_field -%}
+              {%- if block.settings.acf_field_key != blank -%}
+                {%- assign acf_content = product.metafields.accentuate[block.settings.acf_field_key].value -%}
+                {%- if acf_content != blank -%}
+                  <div class="rte">
+                    {{ acf_content }}
+                  </div>
+                {%- endif -%}
               {%- endif -%}
-              <div class="rte">
-                {{ block.settings.custom_content }}
-              </div>
-            {%- elsif block.settings.page != blank -%}
-              <h1 class="h2">{{ block.settings.page.title | escape }}</h1>
-              {{ block.settings.page.content }}
+            {%- else -%}
+              {%- if block.settings.custom_content != blank -%}
+                {%- if block.settings.popup_title != blank -%}
+                  <h1 class="h2">{{ block.settings.popup_title | escape }}</h1>
+                {%- endif -%}
+                <div class="rte">
+                  {{ block.settings.custom_content }}
+                </div>
+              {%- elsif block.settings.page != blank -%}
+                <h1 class="h2">{{ block.settings.page.title | escape }}</h1>
+                {{ block.settings.page.content }}
+              {%- endif -%}
             {%- endif -%}
           </div>
         </div>
@@ -1249,26 +1260,39 @@
           "content": "Popup Content"
         },
         {
+          "type": "checkbox",
+          "id": "use_acf_field",
+          "label": "Use ACF Field",
+          "default": false,
+          "info": "Enable to use a metafield instead of custom content or page"
+        },
+        {
+          "type": "text",
+          "id": "acf_field_key",
+          "label": "ACF Field Key",
+          "info": "Enter the metafield key: 'ingredients', 'informed_sports', or 'description'"
+        },
+        {
           "type": "paragraph",
-          "content": "Choose either custom content OR select a page. Custom content takes priority if both are filled."
+          "content": "Note: If 'Use ACF Field' is enabled, the fields below will be ignored."
         },
         {
           "type": "text",
           "id": "popup_title",
           "label": "Popup Title",
-          "info": "Title shown inside the popup (only used with custom content)"
+          "info": "Title shown inside the popup (not used with ACF Field)"
         },
         {
           "type": "richtext",
           "id": "custom_content",
           "label": "Custom Content",
-          "info": "Add custom content using the rich text editor"
+          "info": "Add custom content using the rich text editor (not used with ACF Field)"
         },
         {
           "id": "page",
           "type": "page",
           "label": "t:sections.main-product.blocks.popup.settings.page.label",
-          "info": "Alternative: Select a page for popup content"
+          "info": "Alternative: Select a page for popup content (not used with ACF Field)"
         }
       ]
     },
