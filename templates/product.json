@@ -153,10 +153,12 @@
         "column-1"
       ],
       "custom_css": [
-        ".multicolumn {border-top: 5px solid #000; border-bottom: 5px solid #000;}"
+        ".multicolumn {border-top: 5px solid #000; border-bottom: 5px solid #000;}",
+        ".multicolumn .inline-richtext {font-family: georgiapro, sans-serif; text-align: center;}",
+        ".multicolumn .inline-richtext span {color: #857550;}"
       ],
       "settings": {
-        "title": "UK’s No.1 Sports Recovery Collagen.",
+        "title": "UK’s No.1 Sports Recovery Collagen<span>.</span>",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
