@@ -201,11 +201,11 @@
         "settings": {
           "background": "rgba(0,0,0,0)",
           "background_gradient": "",
-          "text": "#000",
-          "button": "#000",
-          "button_label": "#000",
+          "text": "#000000",
+          "button": "#000000",
+          "button_label": "#000000",
           "secondary_button_label": "#857550",
-          "shadow": "#000"
+          "shadow": "#000000"
         }
       }
     }
