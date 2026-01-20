@@ -116,52 +116,23 @@
         "padding_bottom": 12
       }
     },
-    "image-with-text": {
-      "type": "image-with-text",
-      "blocks": {
-        "image-with-text-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "Best protein powder overall.",
-            "heading_size": "h2"
-          }
-        },
-        "image-with-text-1": {
-          "type": "text",
-          "settings": {
-            "text": "<p>“If you’re looking for a protein powder that tastes as amazing as its nutritional content sounds, this is the winner by a country mile. The chocolate flavour is categorically the best of all. In short, you’ll look forward to drinking this protein powder rather than dreading it.” <a href=\"#\" title=\"#\">Read the article</a></p>",
-            "text_style": "body"
-          }
-        }
-      },
-      "block_order": [
-        "image-with-text-0",
-        "image-with-text-1"
-      ],
-      "settings": {
-        "image": "shopify://shop_images/indy-best-buy-logo.png",
-        "height": "adapt",
-        "desktop_image_width": "small",
-        "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "top",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "",
-        "color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "multicolumn": {
       "type": "multicolumn",
       "blocks": {
+        "column_7D3XiJ": {
+          "type": "column",
+          "settings": {
+            "title": "",
+            "text": "<p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
         "column-0": {
           "type": "column",
           "settings": {
-            "title": "Free Shipping",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "title": "",
+            "text": "<p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
             "link_label": "",
             "link": ""
           }
@@ -169,20 +140,20 @@
         "column-1": {
           "type": "column",
           "settings": {
-            "title": "Hassle-Free Exchanges",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "title": "",
+            "text": "<p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
             "link_label": "",
             "link": ""
           }
         }
       },
       "block_order": [
+        "column_7D3XiJ",
         "column-0",
         "column-1"
       ],
-      "disabled": true,
       "settings": {
-        "title": "",
+        "title": "UK’s No.1 Sports Recovery Collagen.",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
@@ -261,7 +232,6 @@
   },
   "order": [
     "main",
-    "image-with-text",
     "multicolumn",
     "related-products",
     "1768818492c64112a0"
