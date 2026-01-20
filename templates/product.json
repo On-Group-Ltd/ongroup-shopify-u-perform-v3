@@ -223,7 +223,7 @@
             "image": "shopify://shop_images/multirow-dp.png",
             "caption": "",
             "heading": "",
-            "text": "<h2><strong>High in protein.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p><h2><strong>Low in Calories.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
+            "text": "<h2><strong>High in protein.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.<br/><br/></p><h2><strong>Low in Calories.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
             "button_label": "",
             "button_link": ""
           }
@@ -233,8 +233,8 @@
           "settings": {
             "image": "shopify://shop_images/multirow-dp.png",
             "caption": "",
-            "heading": "Row",
-            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "heading": "",
+            "text": "<h2><strong>High in protein.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.<br/><br/></p><h2><strong>Low in Calories.</strong></h2><p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
             "button_label": "",
             "button_link": ""
           }
