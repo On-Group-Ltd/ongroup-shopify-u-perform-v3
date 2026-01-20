@@ -116,6 +116,45 @@
         "padding_bottom": 12
       }
     },
+    "image_with_text_m68WCb": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_btLHLt": {
+          "type": "heading",
+          "settings": {
+            "heading": "Image with text",
+            "heading_size": "h1"
+          }
+        },
+        "text_AFgabB": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "heading_btLHLt",
+        "text_AFgabB"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/indy-best-buy-logo.png",
+        "height": "adapt",
+        "desktop_image_width": "small",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "no-overlap",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
+        "color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
     "multicolumn": {
       "type": "multicolumn",
       "blocks": {
@@ -238,6 +277,7 @@
   },
   "order": [
     "main",
+    "image_with_text_m68WCb",
     "multicolumn",
     "related-products",
     "1768818492c64112a0"
