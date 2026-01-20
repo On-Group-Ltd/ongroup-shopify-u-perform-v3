@@ -154,7 +154,8 @@
       ],
       "custom_css": [
         ".multicolumn {border-top: 5px solid #000; border-bottom: 5px solid #000;}",
-        ".multicolumn .inline-richtext {font-family: georgiapro, sans-serif; text-align: center;}",
+        ".title-wrapper-with-link {justify-content: center !important;}",
+        ".multicolumn .inline-richtext {font-family: georgiapro, sans-serif;}",
         ".multicolumn .inline-richtext span {color: #857550;}"
       ],
       "settings": {
