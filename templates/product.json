@@ -244,6 +244,9 @@
         "row_HcjDbc",
         "row_nMpn7t"
       ],
+      "custom_css": [
+        ".image-with-text__text h2 {font-family: georgiapro, sans-serif;}"
+      ],
       "name": "t:sections.multirow.presets.name",
       "settings": {
         "image_height": "small",
