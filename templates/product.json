@@ -152,6 +152,9 @@
         "column-0",
         "column-1"
       ],
+      "custom_css": [
+        ".multicolumn {border-top: 5px solid #000; border-bottom: 5px solid #000;}"
+      ],
       "settings": {
         "title": "UK’s No.1 Sports Recovery Collagen.",
         "heading_size": "h1",
