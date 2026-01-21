@@ -12,12 +12,12 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "rating_4qka9M": {
-          "type": "rating",
-          "settings": {}
-        },
         "title": {
           "type": "title",
+          "settings": {}
+        },
+        "reviews_io_reviewsio_rating_output_3tjL7M": {
+          "type": "shopify://apps/reviews-io/blocks/reviewsio-rating-output/92a082e5-b297-4e88-b428-ac96cbc505f9",
           "settings": {}
         },
         "price": {
@@ -89,8 +89,8 @@
         }
       },
       "block_order": [
-        "rating_4qka9M",
         "title",
+        "reviews_io_reviewsio_rating_output_3tjL7M",
         "price",
         "description",
         "variant_picker",
@@ -267,7 +267,7 @@
             "primary_btn_text_color": "#ffffff",
             "secondary_btn_border_color": "#000000",
             "secondary_btn_text_color": "#000000",
-            "border_color": "#000",
+            "border_color": "#000000",
             "heading_text_color": "#000000",
             "heading_font": "sans_serif_n4",
             "body_text_color": "#000000",
