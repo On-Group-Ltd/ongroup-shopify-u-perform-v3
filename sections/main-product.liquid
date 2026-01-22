@@ -42,6 +42,24 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
+    .image-with-text__text h1,
+    .image-with-text__text h2,
+    .image-with-text__text h3,
+    .image-with-text__text h4,
+    .image-with-text__text h5,
+    .image-with-text__text h6  {
+      font-family: georgiapro, sans-serif;
+      font-size: 4rem;
+    }
+    .image-with-text__text h1::after,
+    .image-with-text__text h2::after,
+    .image-with-text__text h3::after,
+    .image-with-text__text h4::after,
+    .image-with-text__text h5::after,
+    .image-with-text__text h6::after {
+      content: ".";
+      color: #857550;
+    }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
