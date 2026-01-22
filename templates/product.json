@@ -217,6 +217,7 @@
         "row_nMpn7t"
       ],
       "custom_css": [
+        "@media screen and (min-width: 750px) {.multirow__inner {row-gap: 7.5rem; }}",
         ".image-with-text__text h2 {font-family: georgiapro, sans-serif; font-size: 4rem;}",
         ".image-with-text__text p {line-height: 1.3;}"
       ],
