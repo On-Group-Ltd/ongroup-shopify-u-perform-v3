@@ -509,6 +509,17 @@
                       </button>
                     </div>
                   </div>
+                  <script>
+                    function toggleAccordion(header)
+                    {
+                      const content = header.nextElementSibling;
+                      const icon = header.querySelector('.accordion-icon');
+
+                      content.classList.toggle('active');
+                      icon.classList.toggle('active');
+                    }
+
+                  </script>
                 </modal-opener>
               {%- when 'share' -%}
                 {% liquid

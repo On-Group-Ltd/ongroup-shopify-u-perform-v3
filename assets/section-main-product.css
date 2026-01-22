@@ -1005,6 +1005,46 @@ a.product__text {
   font-size: 1.4rem;
 }
 
+.product-popup-modal__content-info .accordion-item {
+  border-top: 1px solid #333;
+}
+
+.product-popup-modal__content-info .accordion-item:last-child {
+  border-bottom: 1px solid #333;
+}
+
+.product-popup-modal__content-info .accordion-header {
+  position: relative; display: block; width: 100%; padding: 20px 50px 20px 10px; cursor: pointer; font-size: 14px; font-weight: 400; color: #333; letter-spacing: 0.5px; background: none; border: none; text-align: left;
+}
+
+.product-popup-modal__content-info .accordion-header:hover {
+  background-color: #f9f9f9;
+}
+
+.product-popup-modal__content-info .accordion-icon {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 20px; line-height: 1; transition: transform 0.3s ease;
+}
+
+.product-popup-modal__content-info .accordion-icon.active {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.product-popup-modal__content-info .accordion-content {
+  display: none; padding: 0 10px 20px; color: #666; line-height: 1.8;
+}
+
+.product-popup-modal__content-info .accordion-content.active {
+  display: block;
+}
+
+.product-popup-modal__content-info .accordion-content p {
+  margin: 0 0 15px;
+}
+
+.product-popup-modal__content-info .accordion-content p:last-child {
+  margin: 0;
+}
+
 @media screen and (max-width: 749px) {
   .product-popup-modal__trigger-wrapper {
     gap: 1rem;
