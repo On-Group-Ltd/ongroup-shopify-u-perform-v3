@@ -1008,14 +1008,14 @@ a.product__text {
   padding-left: 0;
 }
 
-.product-popup-modal__content-info ul li:before {
+.product-popup-modal__content-info ul li::marker {
     content: "\2713";
     position: absolute;
     left: 0;
     color: #85744f;
     font-weight: 700;
     font-size: 1.6rem;
-    font-family: system-ui;
+    font-family: "georgiapro",sans-serif;
 }
 
 .product-popup-modal__content-info .accordion-item {
@@ -2059,13 +2059,16 @@ slider-component.slider-mobile-gutter {
   position: relative;
   padding-left: 2.5rem;
 }
+.product__description ul {
+  padding-left: 0;
+}
 
 .product__description ul li::before {
-  content: "✓";
+  content: "\2713";
   position: absolute;
   left: 0;
   color: #85744f;
   font-weight: bold;
   font-size: 1.6rem;
-  font-family: system-ui;
+  font-family: "georgiapro",sans-serif;
 }
