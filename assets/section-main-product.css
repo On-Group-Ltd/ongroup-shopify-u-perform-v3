@@ -1004,6 +1004,19 @@ a.product__text {
   min-height: auto;
   font-size: 1.4rem;
 }
+.product-popup-modal__content-info ul {
+  padding-left: 0;
+}
+
+.product-popup-modal__content-info ul li:before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: #85744f;
+    font-weight: 700;
+    font-size: 1.6rem;
+    font-family: system-ui;
+}
 
 .product-popup-modal__content-info .accordion-item {
   border-top: 1px solid #333;
