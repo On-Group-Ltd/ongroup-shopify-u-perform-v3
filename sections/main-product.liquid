@@ -788,7 +788,6 @@
                   {{ block.settings.custom_content }}
                 </div>
               {%- elsif block.settings.page != blank -%}
-                <h1 class="h2">{{ block.settings.page.title | escape }}</h1>
                 {{ block.settings.page.content }}
               {%- endif -%}
             {%- endif -%}
