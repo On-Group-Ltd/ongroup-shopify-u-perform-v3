@@ -190,6 +190,11 @@
       },
       "16798170927650018749": {
         "type": "shopify://apps/recharge-subscriptions/blocks/storefront-experiences/371eed76-0b44-4869-9813-730372ea378e",
+        "disabled": true,
+        "settings": {}
+      },
+      "12643349056429947648": {
+        "type": "shopify://apps/stky-add-to-cart/blocks/satcb/2d1e1d5d-e947-4201-9a4f-8b73ff50f821",
         "disabled": false,
         "settings": {}
       }
