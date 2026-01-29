@@ -222,7 +222,7 @@
         "color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
         "image_ratio": "adapt",
         "image_shape": "default",
-        "show_secondary_image": false,
+        "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": true,
         "quick_add": "standard",
