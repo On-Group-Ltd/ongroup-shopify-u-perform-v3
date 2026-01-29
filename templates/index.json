@@ -152,7 +152,7 @@
       ],
       "name": "Athletes Slider",
       "settings": {
-        "title": "Backed by Athletes. Built for You.",
+        "title": "Backed by Athletes. Built for You<span>.</span>",
         "description": "At U Perform, we believe in the power of people pushing their limits. Our athletes and ambassadors train, compete, and recover with U Perform, trusting us to help them stay stronger, perform longer, and go the distance.",
         "button_text": "Team U Perform",
         "button_link": "",
@@ -209,7 +209,7 @@
       "settings": {
         "collection": "collagen-collection",
         "products_to_show": 3,
-        "title": "Shop Best Sellers.",
+        "title": "Shop Best Sellers<span>.</span>",
         "heading_size": "hxxl",
         "description": "",
         "show_description": false,
