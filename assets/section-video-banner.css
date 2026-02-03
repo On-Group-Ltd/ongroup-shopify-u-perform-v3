@@ -1,0 +1,48 @@
+/* Video and iframe fill the .banner__media container with object-fit: cover.
+   Layout/sizing of .banner__media itself comes from section-image-banner.css. */
+.banner__media video,
+.banner__media iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner__media iframe {
+  border: 0;
+}
+
+/* Poster image sits behind the video/iframe as a fallback while loading.
+   base.css applies object-fit: cover to .media > img, but does not set
+   positioning — this rule is needed so it does not push layout flow. */
+.banner__video-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Black background so letterboxed areas (if any) do not show white. */
+.banner__media video {
+  background: #000000;
+}
+
+/* Strip the text-box background so content sits directly over the video. */
+.banner--video .banner__box {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.banner--video .content-container:after {
+  display: none;
+}
+
+.banner--video .button--secondary {
+  --alpha-button-background: 0;
+}

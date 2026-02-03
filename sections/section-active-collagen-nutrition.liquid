@@ -7,21 +7,24 @@
     {% endif %}
 
     <div class="nutrition-stats">
-      {% if section.settings.stat_1_image != blank %}
+      {% if section.settings.stat_1_number != blank or section.settings.stat_1_text != blank %}
         <div class="nutrition-stat">
-          <img src="{{ section.settings.stat_1_image | image_url: width: 800 }}" alt="Nutrition Stat 1" class="stat-image">
+          <div class="stat-number" data-target="{{ section.settings.stat_1_number }}">0</div>
+          <div class="stat-text">{{ section.settings.stat_1_text }}</div>
         </div>
       {% endif %}
 
-      {% if section.settings.stat_2_image != blank %}
+      {% if section.settings.stat_2_number != blank or section.settings.stat_2_text != blank %}
         <div class="nutrition-stat">
-          <img src="{{ section.settings.stat_2_image | image_url: width: 800 }}" alt="Nutrition Stat 2" class="stat-image">
+          <div class="stat-number" data-target="{{ section.settings.stat_2_number }}">0</div>
+          <div class="stat-text">{{ section.settings.stat_2_text }}</div>
         </div>
       {% endif %}
 
-      {% if section.settings.stat_3_image != blank %}
+      {% if section.settings.stat_3_number != blank or section.settings.stat_3_text != blank %}
         <div class="nutrition-stat">
-          <img src="{{ section.settings.stat_3_image | image_url: width: 800 }}" alt="Nutrition Stat 3" class="stat-image">
+          <div class="stat-number" data-target="{{ section.settings.stat_3_number }}">0</div>
+          <div class="stat-text">{{ section.settings.stat_3_text }}</div>
         </div>
       {% endif %}
     </div>
@@ -72,11 +75,20 @@
   flex: 0 1 220px;
 }
 
-.stat-image {
-  width: 100%;
-  max-width: 350px;
-  height: auto;
-  object-fit: contain;
+.stat-number {
+    font-size: clamp(3rem, 15vw, 18rem);
+  font-weight: 900;
+  color: {{ section.settings.stat_number_color }};
+    margin-bottom: 10px;
+    line-height: 1;
+    letter-spacing: -11px;
+    font-family: sans-serif;
+}
+
+.stat-text {
+  font-size: clamp(1rem, 2vw, 3rem);
+  color: {{ section.settings.stat_text_color }};
+  line-height: 1.4;
 }
 
 .nutrition-description {
@@ -94,6 +106,84 @@
   }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const nutritionSection = document.querySelector('.nutrition-info-section');
+  const statNumbers = document.querySelectorAll('.stat-number');
+  let hasAnimated = false;
+
+  // Function to parse number from string (handles units like g, mg, %, etc)
+  function parseNumber(str) {
+    const match = str.match(/[\d.]+/);
+    return match ? parseFloat(match[0]) : 0;
+  }
+
+  // Function to get the unit/suffix from string
+  function getUnit(str) {
+    return str.replace(/[\d.\s]/g, '');
+  }
+
+  // Function to animate counting
+  function animateCounter(element, target, duration = 2000) {
+    const targetNum = parseNumber(target);
+    const unit = getUnit(target);
+    const startTime = performance.now();
+    const startValue = 0;
+
+    // Determine if we should use decimals
+    const hasDecimals = target.includes('.');
+    const decimals = hasDecimals ? (target.split('.')[1] || '').length : 0;
+
+    function updateCounter(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smooth animation (easeOutExpo)
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+      const currentValue = startValue + (targetNum - startValue) * easeProgress;
+
+      // Format the number
+      const displayValue = decimals > 0
+        ? currentValue.toFixed(decimals)
+        : Math.floor(currentValue);
+
+      element.textContent = displayValue + unit;
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        element.textContent = target; // Ensure final value is exact
+      }
+    }
+
+    requestAnimationFrame(updateCounter);
+  }
+
+  // Intersection Observer to trigger animation when section is visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true;
+
+        statNumbers.forEach(statNumber => {
+          const target = statNumber.getAttribute('data-target');
+          if (target) {
+            animateCounter(statNumber, target);
+          }
+        });
+      }
+    });
+  }, {
+    threshold: 0.3 // Trigger when 30% of the section is visible
+  });
+
+  if (nutritionSection) {
+    observer.observe(nutritionSection);
+  }
+});
+</script>
 
 {% schema %}
 {
@@ -116,27 +206,60 @@
       "content": "Stat 1"
     },
     {
-      "type": "image_picker",
-      "id": "stat_1_image",
-      "label": "Stat 1 Image"
+      "type": "text",
+      "id": "stat_1_number",
+      "label": "Stat 1 Number",
+      "default": "10g"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_text",
+      "label": "Stat 1 Text",
+      "default": "Collagen per serving"
     },
     {
       "type": "header",
       "content": "Stat 2"
     },
     {
-      "type": "image_picker",
-      "id": "stat_2_image",
-      "label": "Stat 2 Image"
+      "type": "text",
+      "id": "stat_2_number",
+      "label": "Stat 2 Number",
+      "default": "100%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_text",
+      "label": "Stat 2 Text",
+      "default": "Natural ingredients"
     },
     {
       "type": "header",
       "content": "Stat 3"
     },
     {
-      "type": "image_picker",
-      "id": "stat_3_image",
-      "label": "Stat 3 Image"
+      "type": "text",
+      "id": "stat_3_number",
+      "label": "Stat 3 Number",
+      "default": "0g"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_text",
+      "label": "Stat 3 Text",
+      "default": "Sugar"
+    },
+    {
+      "type": "color",
+      "id": "stat_number_color",
+      "label": "Stat Number Color",
+      "default": "#857550"
+    },
+    {
+      "type": "color",
+      "id": "stat_text_color",
+      "label": "Stat Text Color",
+      "default": "#FFFFFF"
     },
     {
       "type": "header",
