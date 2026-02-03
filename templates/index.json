@@ -27,6 +27,7 @@
       "block_order": [
         "button"
       ],
+      "disabled": true,
       "custom_css": [
         ".banner--desktop-transparent .button--secondary {color: #857550; font-weight: bold; font-size: 2.5rem; background: #000;}",
         ".button--secondary:after {all: unset !important;}"
@@ -43,6 +44,39 @@
         "stack_images_on_mobile": false,
         "mobile_content_alignment": "center",
         "show_text_below": false
+      }
+    },
+    "video_banner_waQJqc": {
+      "type": "video-banner",
+      "blocks": {
+        "buttons_3GxA9H": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "SHOP NOW",
+            "button_link_1": "#",
+            "button_style_secondary_1": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "buttons_3GxA9H"
+      ],
+      "name": "t:sections.video-banner.presets.name",
+      "settings": {
+        "video": "shopify://files/videos/Homepage Video Oct 2022 All Clips.mp4",
+        "video_description": "",
+        "enable_video_looping": true,
+        "image_overlay_opacity": 0,
+        "image_height": "medium",
+        "desktop_content_position": "middle-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": true,
+        "color_scheme": "",
+        "mobile_content_alignment": "center",
+        "show_text_below": true
       }
     },
     "section_as_seen_in_aqPgi3": {
@@ -303,6 +337,7 @@
   },
   "order": [
     "image_banner",
+    "video_banner_waQJqc",
     "section_as_seen_in_aqPgi3",
     "rich_text",
     "informed_sport_banner_YHEpet",
