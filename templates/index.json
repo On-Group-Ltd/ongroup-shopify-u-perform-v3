@@ -64,6 +64,9 @@
       "block_order": [
         "buttons_3GxA9H"
       ],
+      "custom_css": [
+        ".banner__buttons .button {color: #857550; font-weight: bold; font-size: 2.5rem; background: #000; font-family: sans-serif;}"
+      ],
       "name": "t:sections.video-banner.presets.name",
       "settings": {
         "video": "shopify://files/videos/Homepage Video Oct 2022 All Clips.mp4",
