@@ -70,6 +70,7 @@
       "name": "t:sections.video-banner.presets.name",
       "settings": {
         "video": "shopify://files/videos/Homepage Video Oct 2022 All Clips.mp4",
+        "video_url": "",
         "video_description": "",
         "enable_video_looping": true,
         "image_overlay_opacity": 0,
@@ -307,6 +308,7 @@
       "block_order": [
         "reviews_io_reviewsio_card_carousel_gfgVzX"
       ],
+      "custom_css": [],
       "settings": {
         "include_margins": true
       }
