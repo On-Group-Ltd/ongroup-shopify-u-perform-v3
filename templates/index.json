@@ -96,6 +96,40 @@
         "padding_bottom": 20
       }
     },
+    "featured_collection": {
+      "type": "featured-collection",
+      "custom_css": [
+        "h2 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}",
+        "h2 span {color: #857550;}",
+        ".button,.button-label,.shopify-challenge__button,.customer button {font-size: 2rem;}",
+        ".card__heading.h5,.card-information > .price {font-size: 2.5rem;}"
+      ],
+      "settings": {
+        "collection": "collagen-collection",
+        "products_to_show": 3,
+        "title": "Shop Best Sellers<span>.</span>",
+        "heading_size": "hxxl",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 3,
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
     "rich_text": {
       "type": "rich-text",
       "blocks": {
@@ -241,40 +275,6 @@
         "padding_bottom": 80
       }
     },
-    "featured_collection": {
-      "type": "featured-collection",
-      "custom_css": [
-        "h2 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}",
-        "h2 span {color: #857550;}",
-        ".button,.button-label,.shopify-challenge__button,.customer button {font-size: 2rem;}",
-        ".card__heading.h5,.card-information > .price {font-size: 2.5rem;}"
-      ],
-      "settings": {
-        "collection": "collagen-collection",
-        "products_to_show": 3,
-        "title": "Shop Best Sellers<span>.</span>",
-        "heading_size": "hxxl",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "columns_desktop": 3,
-        "enable_desktop_slider": false,
-        "full_width": false,
-        "show_view_all": false,
-        "view_all_style": "solid",
-        "color_scheme": "scheme-7d09a1ee-8e8d-487a-b086-091eb5d9a133",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": true,
-        "quick_add": "standard",
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
     "1764238953a12a491e": {
       "type": "apps",
       "blocks": {
@@ -344,13 +344,13 @@
     "image_banner",
     "video_banner_waQJqc",
     "section_as_seen_in_aqPgi3",
+    "featured_collection",
     "rich_text",
     "informed_sport_banner_YHEpet",
     "section_athletes_slider_bpy79a",
     "section_active_collagen_nutrition_R63wJB",
     "informed_sport_banner_RMKNLW",
     "section_athlete_profile_y8V4id",
-    "featured_collection",
     "1764238953a12a491e",
     "latest_blog_Aggr36"
   ]
