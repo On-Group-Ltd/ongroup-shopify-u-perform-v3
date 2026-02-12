@@ -74,7 +74,7 @@
         "video_description": "",
         "enable_video_looping": true,
         "image_overlay_opacity": 0,
-        "image_height": "medium",
+        "image_height": "small",
         "desktop_content_position": "middle-center",
         "desktop_content_alignment": "center",
         "show_text_box": true,
