@@ -48,7 +48,7 @@
 }
 
 .nutrition-title {
-  font-size: clamp(2rem, 5vw, 7.2rem);
+  font-size: clamp(2rem, 6.75vw, 7.2rem);
   font-weight: 400;
   margin-bottom: 60px;
   color: {{ section.settings.title_color }};
@@ -76,7 +76,7 @@
 }
 
 .stat-number {
-    font-size: clamp(3rem, 15vw, 18rem);
+  font-size: clamp(3rem, 15vw, 18rem);
   font-weight: 900;
   color: {{ section.settings.stat_number_color }};
     margin-bottom: 10px;
@@ -103,6 +103,24 @@
   .nutrition-stats {
     justify-content: center;
     gap: 40px;
+  }
+  .nutrition-stats .stat-number {
+    font-size: clamp(3rem, 30vw, 15rem);
+  }
+  .nutrition-stats .stat-text {
+    font-size: clamp(1rem, 5vw, 3rem);
+  }
+  .nutrition-description {
+    font-size: clamp(0.875rem, 5vw, 3rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .nutrition-title {
+    
+  }
+  .nutrition-stats .nutrition-stat {
+    flex: 0 1 170px;
   }
 }
 </style>
