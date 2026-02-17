@@ -56,7 +56,7 @@
 
 .profile-description p {
   margin: 0 0 1rem;
-  font-size: 3rem;
+  font-size: 2.5rem;
   line-height: 1.5;
 }
 
@@ -72,7 +72,7 @@
   }
   
   .profile-title {
-    font-size: 3rem;
+    font-size: 40px;
   }
   
   .profile-image {
@@ -84,12 +84,12 @@
 /* Mobile */
 @media screen and (max-width: 749px) {
   .profile-title {
-    font-size: 2.5rem;
+    font-size: 28px;
     margin-bottom: 1.5rem;
   }
-  
-  .profile-description {
-    font-size: 1rem;
+
+  .profile-description p {
+    font-size: 14px;
   }
   
   .profile-container {

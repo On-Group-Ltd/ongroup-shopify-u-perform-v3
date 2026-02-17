@@ -101,7 +101,7 @@
       "custom_css": [
         "h2 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}",
         "h2 span {color: #857550;}",
-        ".button,.button-label,.shopify-challenge__button,.customer button {font-size: 2rem;}",
+        ".button,.button-label,.shopify-challenge__button,.customer button {font-size: 2.5rem;}",
         ".card__heading.h5,.card-information > .price {font-size: 2.5rem;}"
       ],
       "settings": {
@@ -155,7 +155,7 @@
         ".rich-text__blocks {max-width: 100%;}",
         "h2.rich-text__heading {font-family: \"georgiapro\", sans-serif;}",
         "h2.rich-text__heading span,.rich-text__text p strong {color: #857550;}",
-        ".rich-text__text p {font-size: 3.5rem; line-height: 1.5; color: #000;}"
+        ".rich-text__text p {font-size: 2.5rem; line-height: 1.5; color: #000;}"
       ],
       "settings": {
         "desktop_content_position": "center",
