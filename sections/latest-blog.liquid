@@ -35,6 +35,17 @@
   .latest-blog__article-excerpt {
     color: {{ section.settings.excerpt_color }};
   }
+
+  .latest-blog__read-more-link {
+    color: #857550;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .latest-blog__read-more-link:hover {
+    text-decoration: underline;
+  }
 {%- endstyle -%}
 
 <div class="latest-blog section-{{ section.id }}-padding">
@@ -109,6 +120,7 @@
                     {%- else -%}
                       {{ article.content | strip_html | truncate: 150 }}
                     {%- endif -%}
+                    <a href="{{ article.url }}" class="latest-blog__read-more-link">Read more</a>
                   </p>
                 {%- endif -%}
 

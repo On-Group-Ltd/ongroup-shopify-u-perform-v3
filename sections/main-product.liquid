@@ -60,8 +60,104 @@
       content: ".";
       color: #857550;
     }
+
+    /* Mobile product header above image slider */
+    .product__mobile-title-rating {
+      display: none;
+    }
+
+    .product__short-description p {
+      line-height: 1.2;
+      margin-top: 0;
+    }
+
+    @media screen and (max-width: 749px) {
+      .product__mobile-title-rating {
+        display: block;
+        padding: 1.5rem 1.5rem 0;
+        text-align: center;
+        flex-grow: 1;
+      }
+      .product__info-wrapper .product__title {
+        display: none;
+      }
+      .product__info-wrapper .rating-wrapper {
+        display: none;
+      }
+      /* Hide ruk rating in sidebar on mobile (it is moved to mobile header via JS) */
+      .product__info-container .ruk_rating_snippet {
+        display: none;
+      }
+      /* Centre the rating once moved into the mobile header */
+      .product__mobile-rating-target {
+        display: flex;
+        justify-content: center;
+      }
+
+      /* Reorder product description below popup modals on mobile */
+      .product__info-container {
+        display: flex;
+        flex-direction: column;
+      }
+      /* Prevent margin doubling (flex doesn't collapse margins like block layout does) */
+      .product__info-container > * {
+        margin-bottom: 0;
+      }
+      /* Push description after all popup modal openers (order: 0) */
+      .product__description {
+        order: 5;
+      }
+      /* Keep share button after description */
+      .share-button {
+        order: 6;
+      }
+
+      /* Mobile slider dots */
+      .slider-dots-mobile {
+        display: flex !important;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px 0 4px;
+      }
+      .slider-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: rgba(var(--color-foreground), 0.25);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        flex-shrink: 0;
+      }
+      .slider-dot--active {
+        background-color: rgb(var(--color-foreground));
+        transform: scale(1.25);
+      }
+      .product__short-description p br {
+        display: none;
+      }
+    }
+
+    .slider-dots-mobile {
+      display: none;
+    }
   {%- endstyle -%}
 
+  <script>
+    (function() {
+      function moveRatingToMobileHeader() {
+        if (!window.matchMedia('(max-width: 749px)').matches) return;
+        var rating = document.querySelector('.product__info-container .ruk_rating_snippet');
+        var target = document.querySelector('.product__mobile-rating-target');
+        if (rating && target) {
+          target.appendChild(rating);
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', moveRatingToMobileHeader);
+      } else {
+        moveRatingToMobileHeader();
+      }
+    })();
+  </script>
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
   <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
   {%- if product.quantity_price_breaks_configured? -%}
@@ -98,6 +194,16 @@
   {% assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src' %}
   <div class="page-width">
     <div class="product product--{{ section.settings.media_size }} product--{{ section.settings.media_position }} product--{{ section.settings.gallery_layout }} product--mobile-{{ section.settings.mobile_thumbnails }} grid grid--1-col {% if product.media.size > 0 %}grid--2-col-tablet{% else %}product--no-media{% endif %}">
+      <div class="product__mobile-title-rating">
+        <div class="product__title">
+          <h1>{{ product.title | escape }}</h1>
+          {%- if product.metafields.accentuate.prod_short_description != blank -%}
+            <div class="product__short-description">{{ product.metafields.accentuate.prod_short_description }}</div>
+          {%- endif -%}
+        </div>
+        <div class="product__mobile-rating-target"></div>
+      </div>
+
       <div class="grid__item product__media-wrapper">
         {% render 'product-media-gallery', variant_images: variant_images %}
       </div>
@@ -107,6 +213,7 @@
           class="product__info-container{% if section.settings.enable_sticky_info %} product__column-sticky{% endif %}"
         >
           {%- assign product_form_id = 'product-form-' | append: section.id -%}
+          {%- assign popup_blocks = section.blocks | where: 'type', 'popup' -%}
 
           {%- for block in section.blocks -%}
             {%- case block.type -%}
@@ -127,6 +234,9 @@
                       {{ product.title | escape }}
                     </h2>
                   </a>
+                  {%- if product.metafields.accentuate.prod_short_description != blank -%}
+                    <div class="product__short-description">{{ product.metafields.accentuate.prod_short_description }}</div>
+                  {%- endif -%}
                 </div>
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -478,6 +588,9 @@
                   {%- endif -%}
                 </div>
               {%- when 'popup' -%}
+                {%- if block.id == popup_blocks.first.id -%}
+                  <div class="product-popup-modal-section">
+                {%- endif -%}
                 <modal-opener
                   class="product-popup-modal__opener quick-add-hidden"
                   data-modal="#PopupModal-{{ block.id }}"
@@ -521,6 +634,9 @@
 
                   </script>
                 </modal-opener>
+                {%- if block.id == popup_blocks.last.id -%}
+                  </div>
+                {%- endif -%}
               {%- when 'share' -%}
                 {% liquid
                   assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
@@ -776,6 +892,24 @@
                 {%- if acf_content != blank -%}
                   <div class="rte">
                     {{ acf_content }}
+
+                    {% if block.settings.acf_field_key == 'ingredients' %}
+                      {% assign ingredient_names = product.metafields.accentuate.ingredient_name %}
+                      {% assign ingredient_descriptions = product.metafields.accentuate.ingredient_description %}
+
+                      {% if ingredient_names and ingredient_names.size > 0 %}
+                        {% for name in ingredient_names %}
+                          {% assign desc = ingredient_descriptions[forloop.index0] %}
+                          <div class="accordion-item">
+                            <button class="accordion-header" onclick="toggleAccordion(this)">{{ name }}<span class="accordion-icon">⌃</span></button>
+                            <div class="accordion-content">
+                              {% if desc != blank %}<p>{{ desc }}</p>{% endif %}
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endif %}
+
                   </div>
                 {%- endif -%}
               {%- endif -%}

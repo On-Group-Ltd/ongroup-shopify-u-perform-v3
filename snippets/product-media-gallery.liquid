@@ -155,6 +155,13 @@
       <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
       <span class="slider-counter--total">{{ media_count }}</span>
     </div>
+    {%- if media_count > 1 and hide_mobile_slider != true -%}
+      <div class="slider-dots-mobile" id="SliderDots-{{ section.id }}" aria-hidden="true">
+        {%- for i in (1..media_count) -%}
+          <span class="slider-dot{% if forloop.first %} slider-dot--active{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
   </slider-component>
 
   <script>
@@ -174,6 +181,8 @@
       const currentCounter = sliderComponent.querySelector('.slider-counter--current');
       const totalCounter = sliderComponent.querySelector('.slider-counter--total');
       const thumbnailDots = mediaGallery ? Array.from(mediaGallery.querySelectorAll('.thumbnail-dot')) : [];
+      const dotContainer = document.getElementById('SliderDots-{{ section.id }}');
+      const mobileDots = dotContainer ? Array.from(dotContainer.querySelectorAll('.slider-dot')) : [];
 
       if (!slider || !prevButton || !nextButton || slides.length === 0) {
         return;
@@ -205,6 +214,13 @@
             } else {
               dot.removeAttribute('aria-current');
             }
+          });
+        }
+
+        // Update mobile dots
+        if (mobileDots.length > 0) {
+          mobileDots.forEach(function(dot, i) {
+            dot.classList.toggle('slider-dot--active', i === currentIndex);
           });
         }
 
@@ -263,6 +279,43 @@
       }
 
       updateButtons();
+
+      // Track swipe/touch navigation and update dots + counter
+      if (window.IntersectionObserver && slides.length > 1) {
+        var swipeObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var idx = slides.indexOf(entry.target);
+              if (idx >= 0 && idx !== currentIndex) {
+                currentIndex = idx;
+                slides.forEach(function(s) { s.classList.remove('is-active'); });
+                slides[currentIndex].classList.add('is-active');
+                if (mobileDots.length > 0) {
+                  mobileDots.forEach(function(dot, i) {
+                    dot.classList.toggle('slider-dot--active', i === currentIndex);
+                  });
+                }
+                if (thumbnailDots.length > 0) {
+                  thumbnailDots.forEach(function(dot, i) {
+                    if (i === currentIndex) {
+                      dot.setAttribute('aria-current', 'true');
+                    } else {
+                      dot.removeAttribute('aria-current');
+                    }
+                  });
+                }
+                if (currentCounter && totalCounter) {
+                  currentCounter.textContent = currentIndex + 1;
+                  totalCounter.textContent = slides.length;
+                }
+                updateButtons();
+              }
+            }
+          });
+        }, { root: slider, threshold: 0.6 });
+
+        slides.forEach(function(slide) { swipeObserver.observe(slide); });
+      }
     });
   </script>
 
