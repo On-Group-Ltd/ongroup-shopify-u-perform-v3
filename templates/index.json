@@ -137,7 +137,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Train Harder. Recover Faster.",
+            "heading": "Train Harder<span>.</span> Recover Faster<span>.</span>",
             "heading_size": "hxxl"
           }
         },
@@ -156,7 +156,8 @@
         ".rich-text__blocks {max-width: 100%;}",
         "h2.rich-text__heading {font-family: \"georgiapro\", sans-serif;}",
         "h2.rich-text__heading span,.rich-text__text p strong {color: #857550;}",
-        ".rich-text__text p {font-size: 2.5rem; line-height: 1.5; color: #000;}"
+        ".rich-text__text p {font-size: 2.5rem; line-height: 1.5; color: #000;}",
+        "@media (max-width: 480px) {h2.rich-text__heading {font-size: 28px; margin-bottom: 0; } .rich-text__text p {font-size: 14px; }}"
       ],
       "settings": {
         "desktop_content_position": "center",
