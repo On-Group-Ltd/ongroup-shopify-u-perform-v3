@@ -148,3 +148,9 @@
   color: #666;
   font-style: italic;
 }
+
+@media (max-width: 480px) {
+    .latest-blog__article-excerpt {
+        font-size: 14px;
+    }
+}

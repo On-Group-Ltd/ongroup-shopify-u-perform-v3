@@ -135,6 +135,30 @@
   border: none;
 }
 
+.slider-dots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.slider-dot.active {
+  background: #857550;
+  transform: scale(1.4);
+}
+
 /* Tablet */
 @media (max-width: 1024px) {
   .athlete-card {
@@ -172,6 +196,11 @@
   .athletes-description {
     font-size: 15px;
     margin-bottom: 40px;
+  }
+
+  .slider-dots {
+    display: flex;
+    gap: 20px;
   }
 }
 

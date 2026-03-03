@@ -50,6 +50,8 @@
           </div>
         </div>
 
+        <div class="slider-dots"></div>
+
         <button class="slider-arrow slider-arrow-right" aria-label="Next">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
@@ -71,50 +73,84 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const sliders = document.querySelectorAll('.athletes-slider-wrapper');
-    
+
     sliders.forEach(sliderWrapper => {
       const track = sliderWrapper.querySelector('.athletes-track');
       const leftArrow = sliderWrapper.querySelector('.slider-arrow-left');
       const rightArrow = sliderWrapper.querySelector('.slider-arrow-right');
+      const dotsContainer = sliderWrapper.querySelector('.slider-dots');
       const cards = sliderWrapper.querySelectorAll('.athlete-card');
-      
+
       if (cards.length === 0) return;
-      
+
       let currentIndex = 0;
-      const cardsToShow = window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : window.innerWidth >= 480 ? 2 : 1;
-      const maxIndex = Math.max(0, cards.length - cardsToShow);
-      
+      let cardsToShow, maxIndex;
+
+      function getCardsToShow() {
+        return window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 3 : window.innerWidth >= 480 ? 2 : 1;
+      }
+
+      function createDots() {
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i <= maxIndex; i++) {
+          const dot = document.createElement('button');
+          dot.classList.add('slider-dot');
+          if (i === currentIndex) dot.classList.add('active');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          dot.addEventListener('click', () => {
+            currentIndex = i;
+            updateSlider();
+          });
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateDots() {
+        const dots = dotsContainer.querySelectorAll('.slider-dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === currentIndex);
+        });
+      }
+
       function updateSlider() {
         const cardWidth = cards[0].offsetWidth;
         const gap = 20;
         const offset = currentIndex * (cardWidth + gap);
         track.style.transform = `translateX(-${offset}px)`;
-        
+
         leftArrow.style.opacity = currentIndex === 0 ? '0.3' : '1';
         leftArrow.style.cursor = currentIndex === 0 ? 'default' : 'pointer';
         rightArrow.style.opacity = currentIndex >= maxIndex ? '0.3' : '1';
         rightArrow.style.cursor = currentIndex >= maxIndex ? 'default' : 'pointer';
+
+        updateDots();
       }
-      
+
       leftArrow.addEventListener('click', () => {
         if (currentIndex > 0) {
           currentIndex--;
           updateSlider();
         }
       });
-      
+
       rightArrow.addEventListener('click', () => {
         if (currentIndex < maxIndex) {
           currentIndex++;
           updateSlider();
         }
       });
-      
+
       window.addEventListener('resize', () => {
         currentIndex = 0;
+        cardsToShow = getCardsToShow();
+        maxIndex = Math.max(0, cards.length - cardsToShow);
+        createDots();
         updateSlider();
       });
-      
+
+      cardsToShow = getCardsToShow();
+      maxIndex = Math.max(0, cards.length - cardsToShow);
+      createDots();
       updateSlider();
     });
   });
