@@ -136,7 +136,7 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Train Harder<span>.</span> Recover Faster<span>.</span>",
+            "heading": "Train Harder. Recover Faster.",
             "heading_size": "hxxl"
           }
         },
@@ -171,6 +171,7 @@
       "name": "Informed Sport Banner",
       "settings": {
         "image": "shopify://shop_images/Informed-sports-banner.jpg",
+        "image_mobile": "shopify://shop_images/informed-sport-certified-mobile.png",
         "button_link": "",
         "padding_top": 0,
         "padding_bottom": 0
@@ -224,7 +225,7 @@
       ],
       "name": "Athletes Slider",
       "settings": {
-        "title": "Backed by Athletes<span>.</span> Built for You<span>.</span>",
+        "title": "Backed by Athletes. Built for You.",
         "description": "At U Perform, we believe in the power of people pushing their limits. Our athletes and ambassadors train, compete, and recover with U Perform, trusting us to help them stay stronger, perform longer, and go the distance.",
         "button_text": "Team U Perform",
         "button_link": "",
@@ -258,6 +259,7 @@
       "name": "Informed Sport Banner",
       "settings": {
         "image": "shopify://shop_images/Active-collagen-image.jpg",
+        "image_mobile": "shopify://shop_images/active-colagen-mobile.png",
         "button_link": "",
         "padding_top": 0,
         "padding_bottom": 0
