@@ -108,7 +108,7 @@
       "settings": {
         "collection": "collagen-collection",
         "products_to_show": 3,
-        "title": "Shop Best Sellers<span>.</span>",
+        "title": "Shop Best Sellers.",
         "heading_size": "hxxl",
         "description": "",
         "show_description": false,
@@ -124,7 +124,7 @@
         "show_secondary_image": true,
         "show_vendor": false,
         "show_rating": true,
-        "quick_add": "standard",
+        "quick_add": "bulk",
         "columns_mobile": "1",
         "swipe_on_mobile": true,
         "padding_top": 60,
