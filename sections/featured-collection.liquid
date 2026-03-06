@@ -36,6 +36,87 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+  .quick-add .product-form__input {
+    margin-bottom: 5px;
+  }
+  .quick-add .product-form__input .select select {
+    color: #222;
+    text-align: center;
+    font-size: 2.5rem;
+    background: transparent;
+  }
+  .quick-add .product-form__input .select .svg-wrapper {
+    color: #222;
+    height: .8rem;
+    width: 5rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .slider-mobile-gutter {
+      position: relative;
+    }
+    .slider-mobile-gutter .slider-button .icon {
+        height: 1.5rem;
+    }
+    .slider-mobile-gutter .slider-buttons--has-mobile-dots {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 0.8rem;
+      pointer-events: none;
+      z-index: 2;
+      background: transparent;
+    }
+
+    .slider-mobile-gutter .slider-buttons--has-mobile-dots .slider-button {
+      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.85);
+      width: 3.4rem;
+      height: 3.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-mobile-gutter .slider-buttons--has-mobile-dots .slider-counter {
+      display: none;
+    }
+
+    .slider-dots-mobile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px !important;
+      padding: 12px 0 4px;
+    }
+
+    .slider-dot {
+      display: block;
+      width: 12px !important;
+      height: 12px !important;
+      border-radius: 50%;
+      background: rgba(var(--color-foreground), 0.2);
+      transition: background 0.2s ease, width 0.2s ease, height 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .slider-dot--active {
+      background: rgba(var(--color-foreground), 0.75);
+      width: 12px !important;
+      height: 12px !important;
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .slider-dots-mobile {
+      display: none;
+    }
+  }
 {%- endstyle -%}
 
 {%- liquid
@@ -164,7 +245,7 @@
         {%- endif -%}
       </ul>
       {%- if show_mobile_slider or show_desktop_slider -%}
-        <div class="slider-buttons">
+        <div class="slider-buttons{% if show_mobile_slider %} slider-buttons--has-mobile-dots{% endif %}">
           <button
             type="button"
             class="slider-button slider-button--prev"
@@ -196,6 +277,41 @@
         </div>
       {%- endif -%}
     </slider-component>
+
+    {%- if show_mobile_slider -%}
+      <div class="slider-dots-mobile" id="SliderDots-{{ section.id }}" aria-hidden="true">
+        {%- for i in (1..products_to_display) -%}
+          <span class="slider-dot{% if forloop.first %} slider-dot--active{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+      <script>
+        (function () {
+          var sectionId = '{{ section.id }}';
+          function initSliderDots() {
+            var sliderEl = document.getElementById('Slider-' + sectionId);
+            if (!sliderEl) return;
+            var sliderComponent = sliderEl.closest('slider-component');
+            if (!sliderComponent) return;
+            var counter = sliderComponent.querySelector('.slider-counter--current');
+            var dotsContainer = document.getElementById('SliderDots-' + sectionId);
+            if (!counter || !dotsContainer) return;
+            var dots = dotsContainer.querySelectorAll('.slider-dot');
+            function updateDots() {
+              var currentIndex = parseInt(counter.textContent.trim(), 10) - 1;
+              dots.forEach(function (dot, i) {
+                dot.classList.toggle('slider-dot--active', i === currentIndex);
+              });
+            }
+            new MutationObserver(updateDots).observe(counter, { childList: true, characterData: true, subtree: true });
+          }
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSliderDots);
+          } else {
+            initSliderDots();
+          }
+        })();
+      </script>
+    {%- endif -%}
 
     {%- if section.settings.show_view_all and more_in_collection -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">

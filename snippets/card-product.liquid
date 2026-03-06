@@ -297,96 +297,98 @@
                 assign qty_rules = true
               endif
             -%}
-            {%- if card_product.variants_count > 1 or qty_rules -%}
-              <modal-opener data-modal="#QuickAdd-{{ card_product.id }}">
-                <button
-                  id="{{ product_form_id }}-submit"
-                  type="submit"
-                  name="add"
-                  class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add animate-arrow{% endif %}"
-                  aria-haspopup="dialog"
-                  aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                  data-product-url="{{ card_product.url }}"
-                >
-                  {{ 'products.product.choose_options' | t }}
-                  {%- if horizontal_quick_add -%}
-                    <span class="icon-wrap">
-                      {{- 'icon-arrow.svg' | inline_asset_content -}}
-                    </span>
-                  {%- endif -%}
-                  {%- render 'loading-spinner' -%}
-                </button>
-              </modal-opener>
-              <quick-add-modal id="QuickAdd-{{ card_product.id }}" class="quick-add-modal">
-                <div
-                  role="dialog"
-                  aria-label="{{ 'products.product.choose_product_options' | t: product_name: card_product.title | escape }}"
-                  aria-modal="true"
-                  class="quick-add-modal__content global-settings-popup"
-                  tabindex="-1"
-                >
-                  <button
-                    id="ModalClose-{{ card_product.id }}"
-                    type="button"
-                    class="quick-add-modal__toggle"
-                    aria-label="{{ 'accessibility.close' | t }}"
-                  >
-                    {{- 'icon-close.svg' | inline_asset_content -}}
-                  </button>
-                  <div id="QuickAddInfo-{{ card_product.id }}" class="quick-add-modal__content-info"></div>
-                </div>
-              </quick-add-modal>
-            {%- else -%}
-              <product-form data-section-id="{{ section.id }}">
-                {%- form 'product',
-                  card_product,
-                  id: product_form_id,
-                  class: 'form',
-                  novalidate: 'novalidate',
-                  data-type: 'add-to-cart-form'
-                -%}
+            <product-form data-section-id="{{ section.id }}">
+              {%- form 'product',
+                card_product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                {%- if card_product.variants_count > 1 -%}
+                  <div class="product-form__input product-form__input--dropdown">
+                    <div class="select">
+                      <select
+                        name="id"
+                        id="Variant-{{ section_id }}-{{ card_product.id }}"
+                        class="select__select"
+                      >
+                        {%- for variant in card_product.variants -%}
+                          <option
+                            value="{{ variant.id }}"
+                            {% if variant == card_product.selected_or_first_available_variant %}selected{% endif %}
+                            {% unless variant.available %}disabled{% endunless %}
+                          >
+                            {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                      <span class="svg-wrapper">
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </span>
+                    </div>
+                  </div>
+                {%- else -%}
                   <input
                     type="hidden"
                     name="id"
                     value="{{ card_product.selected_or_first_available_variant.id }}"
                     class="product-variant-id"
-                    {% if card_product.selected_or_first_available_variant.available == false %}
-                      disabled
-                    {% endif %}
+                    {% if card_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
                   >
-                  <button
-                    id="{{ product_form_id }}-submit"
-                    type="submit"
-                    name="add"
-                    class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add{% endif %}"
-                    aria-haspopup="dialog"
-                    aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
-                    aria-live="polite"
-                    data-sold-out-message="true"
-                    {% if card_product.selected_or_first_available_variant.available == false %}
-                      disabled
-                    {% endif %}
-                  >
-                    <span>
-                      {%- if card_product.selected_or_first_available_variant.available -%}
-                        {{ 'products.product.add_to_cart' | t }}
-                      {%- else -%}
-                        {{ 'products.product.sold_out' | t }}
-                      {%- endif -%}
-                    </span>
-                    <span class="sold-out-message hidden">
-                      {{ 'products.product.sold_out' | t }}
-                    </span>
-                    {%- if horizontal_quick_add -%}
-                      <span class="icon-wrap">
-                        {{- 'icon-plus.svg' | inline_asset_content -}}
+                {%- endif -%}
+                {%- if card_product.selling_plan_groups.size > 0 -%}
+                  <div class="product-form__input product-form__input--dropdown product-form__selling-plan">
+                    <div class="select">
+                      <select
+                        name="selling_plan"
+                        id="SellingPlan-{{ section_id }}-{{ card_product.id }}"
+                        class="select__select"
+                      >
+                        {%- unless card_product.requires_selling_plan -%}
+                          <option value="">One-time purchase</option>
+                        {%- endunless -%}
+                        {%- for selling_plan_group in card_product.selling_plan_groups -%}
+                          {%- for selling_plan in selling_plan_group.selling_plans -%}
+                            <option value="{{ selling_plan.id }}">{{ selling_plan.name }}</option>
+                          {%- endfor -%}
+                        {%- endfor -%}
+                      </select>
+                      <span class="svg-wrapper">
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
                       </span>
+                    </div>
+                  </div>
+                {%- endif -%}
+                <button
+                  id="{{ product_form_id }}-submit"
+                  type="submit"
+                  name="add"
+                  class="quick-add__submit button button--full-width button--secondary{% if horizontal_quick_add %} card--horizontal__quick-add{% endif %}"
+                  aria-labelledby="{{ product_form_id }}-submit title-{{ section_id }}-{{ card_product.id }}"
+                  aria-live="polite"
+                  data-sold-out-message="true"
+                  {% if card_product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+                >
+                  <span>
+                    {%- if card_product.selected_or_first_available_variant.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
                     {%- endif -%}
-                    {%- render 'loading-spinner' -%}
-                  </button>
-                {%- endform -%}
-              </product-form>
-            {%- endif -%}
+                  </span>
+                  <span class="sold-out-message hidden">
+                    {{ 'products.product.sold_out' | t }}
+                  </span>
+                  {%- if horizontal_quick_add -%}
+                    <span class="icon-wrap">
+                      {{- 'icon-plus.svg' | inline_asset_content -}}
+                    </span>
+                  {%- endif -%}
+                  {%- render 'loading-spinner' -%}
+                </button>
+              {%- endform -%}
+            </product-form>
           </div>
         {% elsif quick_add == 'bulk' %}
           {% if card_product.variants_count == 1 %}
