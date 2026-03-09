@@ -140,6 +140,27 @@
         }
       });
 
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      track.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      track.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && currentIndex < maxIndex) {
+            currentIndex++;
+            updateSlider();
+          } else if (diff < 0 && currentIndex > 0) {
+            currentIndex--;
+            updateSlider();
+          }
+        }
+      }, { passive: true });
+
       window.addEventListener('resize', () => {
         currentIndex = 0;
         cardsToShow = getCardsToShow();

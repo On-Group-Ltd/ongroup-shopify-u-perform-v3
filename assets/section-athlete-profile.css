@@ -82,6 +82,12 @@
 }
 
 /* Mobile */
+@media screen and (max-width: 768px) {
+  .profile-description p {
+    text-align: center;
+  }
+}
+
 @media screen and (max-width: 749px) {
   .profile-title {
     font-size: 28px;

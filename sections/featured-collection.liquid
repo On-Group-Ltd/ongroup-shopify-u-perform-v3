@@ -110,6 +110,31 @@
       width: 12px !important;
       height: 12px !important;
     }
+    
+    #collection-{{ section.id }} .card__media .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #collection-{{ section.id }} .card__content {
+      padding: 0.5rem;
+    }
+    #collection-{{ section.id }} .card--media .card__inner .card__content {
+      padding: 0.5rem;
+    }
+    #collection-{{ section.id }} .card__information {
+      padding: 0.4rem 0.5rem;
+    }
+    #collection-{{ section.id }} .card-information > * + * {
+      margin-top: 0.2rem;
+    }
+    #collection-{{ section.id }} .card-information > *:not(.visually-hidden:first-child) + *:not(.rating):not(.card__information-volume-pricing-note) {
+      margin-top: 0.2rem;
+    }
+    #collection-{{ section.id }} .card-wrapper {
+      padding-bottom: 0;
+    }
   }
 
   @media screen and (min-width: 769px) {
