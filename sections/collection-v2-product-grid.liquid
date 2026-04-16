@@ -1,0 +1,374 @@
+{{ 'section-collection-v2.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+    {%- comment -%} Filters & Sorting {%- endcomment -%}
+    {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
+      <aside
+        aria-labelledby="verticalTitle"
+        class="facets-wrapper{% unless section.settings.enable_filtering %} facets-wrapper--no-filters{% endunless %} page-width"
+        id="main-collection-filters"
+        data-id="{{ section.id }}"
+      >
+        {% render 'facets',
+          results: collection,
+          enable_filtering: section.settings.enable_filtering,
+          enable_sorting: section.settings.enable_sorting,
+          filter_type: section.settings.filter_type,
+          paginate: paginate
+        %}
+      </aside>
+    {%- endif -%}
+
+    {%- comment -%} Product Grid {%- endcomment -%}
+    <div
+      class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+      id="ProductGridContainer"
+      {% if settings.animations_reveal_on_scroll %}data-cascade{% endif %}
+    >
+      {%- if collection.products.size == 0 -%}
+        <div class="collection collection--empty page-width" id="product-grid" data-id="{{ section.id }}">
+          <div class="loading-overlay gradient"></div>
+          <div class="title-wrapper center">
+            <h2 class="title title--primary">
+              {{ 'sections.collection_template.empty' | t -}}
+              <br>
+              {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: 'underlined-link link' }}
+            </h2>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="collection page-width">
+          <div class="loading-overlay gradient"></div>
+          <ul
+            id="product-grid"
+            data-id="{{ section.id }}"
+            class="
+              collection-v2-grid
+              collection-v2-grid--{{ section.settings.columns_desktop }}-col
+              {% if section.settings.columns_mobile == '1' %}collection-v2-grid--1-col-mobile{% endif %}
+            "
+          >
+            {%- for product in collection.products -%}
+              {%- assign lazy_load = false -%}
+              {%- if forloop.index > 2 -%}
+                {%- assign lazy_load = true -%}
+              {%- endif -%}
+              <li
+                class="collection-v2-grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: {{ forloop.index }};"
+                {% endif %}
+              >
+                {% render 'card-product-v2',
+                  card_product: product,
+                  show_rating: section.settings.show_rating,
+                  show_description: section.settings.show_description,
+                  show_subscription: section.settings.show_subscription,
+                  show_variant_picker: section.settings.show_variant_picker,
+                  lazy_load: lazy_load,
+                  section_id: section.id
+                %}
+              </li>
+            {%- endfor -%}
+          </ul>
+
+          {%- if paginate.pages > 1 -%}
+            {% render 'pagination', paginate: paginate, anchor: '' %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Bottom Content Blocks {%- endcomment -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="page-width">
+        <div class="collection-v2__bottom-content">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'richtext' -%}
+                <div class="rte" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
+                </div>
+              {%- when 'heading' -%}
+                <h2
+                  class="{{ block.settings.heading_size }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.heading }}
+                </h2>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  {%- endpaginate -%}
+</div>
+
+{%- comment -%} Variant swatch & price update JS {%- endcomment -%}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cards = document.querySelectorAll('.card-v2');
+
+    cards.forEach(function (card) {
+      // Variant swatch click handling
+      var swatches = card.querySelectorAll('[data-variant-swatches] .card-v2__variant-swatch');
+      var variantInput = card.querySelector('.card-v2__variant-input');
+      var addBtn = card.querySelector('[data-add-to-cart]');
+
+      swatches.forEach(function (swatch) {
+        swatch.addEventListener('click', function () {
+          // Update active state
+          swatches.forEach(function (s) { s.classList.remove('active'); });
+          swatch.classList.add('active');
+
+          // Update hidden variant input
+          if (variantInput) {
+            variantInput.value = swatch.dataset.variantId;
+          }
+
+          // Update button price and disabled state
+          if (addBtn) {
+            var price = parseInt(swatch.dataset.variantPrice);
+            var available = swatch.dataset.variantAvailable === 'true';
+            var btnSpan = addBtn.querySelector('span');
+
+            if (available) {
+              addBtn.disabled = false;
+              if (btnSpan) {
+                btnSpan.textContent = 'Add to basket - ' + formatMoney(price);
+              }
+            } else {
+              addBtn.disabled = true;
+              if (btnSpan) {
+                btnSpan.textContent = '{{ "products.product.sold_out" | t }}';
+              }
+            }
+          }
+        });
+      });
+
+      // Variant dropdown change handling
+      var variantSelect = card.querySelector('select[name="id"]');
+      if (variantSelect && addBtn) {
+        variantSelect.addEventListener('change', function () {
+          var selected = variantSelect.options[variantSelect.selectedIndex];
+          var price = parseInt(selected.dataset.variantPrice);
+          var available = !selected.disabled;
+          var btnSpan = addBtn.querySelector('span');
+
+          if (available) {
+            addBtn.disabled = false;
+            if (btnSpan) {
+              btnSpan.textContent = 'Add to basket - ' + formatMoney(price);
+            }
+          } else {
+            addBtn.disabled = true;
+            if (btnSpan) {
+              btnSpan.textContent = '{{ "products.product.sold_out" | t }}';
+            }
+          }
+        });
+      }
+    });
+
+    // Format price in store currency
+    function formatMoney(cents) {
+      var moneyFormat = {{ shop.money_format | json }};
+      var amount = (cents / 100).toFixed(2);
+      return moneyFormat.replace(/\{\{\s*amount\s*\}\}/, amount)
+                        .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100))
+                        .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
+                        .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/, Math.round(cents / 100));
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection V2 Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "min": 4,
+      "max": 36,
+      "step": 4,
+      "default": 16,
+      "label": "Products per page"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "Desktop columns"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "Mobile columns",
+      "options": [
+        { "value": "1", "label": "1 column" },
+        { "value": "2", "label": "2 columns" }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Card settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": true,
+      "label": "Show product rating",
+      "info": "Requires a product reviews app with rating metafields."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "default": true,
+      "label": "Show product description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subscription",
+      "default": true,
+      "label": "Show subscription options",
+      "info": "Displays selling plan dropdowns on product cards."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variant_picker",
+      "default": true,
+      "label": "Show variant picker",
+      "info": "Swatches for 5 or fewer variants, dropdown for more."
+    },
+    {
+      "type": "header",
+      "content": "Filtering and sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filtering",
+      "default": true,
+      "label": "Enable filtering"
+    },
+    {
+      "type": "select",
+      "id": "filter_type",
+      "default": "horizontal",
+      "label": "Filter layout",
+      "options": [
+        { "value": "horizontal", "label": "Horizontal" },
+        { "value": "vertical", "label": "Vertical" },
+        { "value": "drawer", "label": "Drawer" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sorting",
+      "default": true,
+      "label": "Enable sorting"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "label": "Top padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36,
+      "label": "Bottom padding"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "richtext",
+      "name": "Rich text",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Add content below the product grid.</p>",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Heading",
+          "label": "Heading"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "default": "h2",
+          "label": "Heading size",
+          "options": [
+            { "value": "h3", "label": "Small" },
+            { "value": "h2", "label": "Medium" },
+            { "value": "h1", "label": "Large" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,215 @@
+{% comment %}
+  Renders an enhanced product card for Collection V2.
+
+  Accepts:
+  - card_product: {Object} Product Liquid object
+  - show_rating: {Boolean} Show star rating. Default: true
+  - show_description: {Boolean} Show product description. Default: true
+  - show_subscription: {Boolean} Show selling plan options. Default: true
+  - show_variant_picker: {Boolean} Show variant swatches/dropdown. Default: true
+  - lazy_load: {Boolean} Lazy load the image. Default: true
+  - section_id: {String} The section ID
+
+  Usage:
+  {% render 'card-product-v2', card_product: product, section_id: section.id %}
+{% endcomment %}
+
+{%- if card_product and card_product != empty -%}
+  {%- liquid
+    assign current_variant = card_product.selected_or_first_available_variant
+    assign card_id = section_id | append: '-' | append: card_product.id
+    assign product_form_id = 'card-v2-form-' | append: card_id
+  -%}
+
+  <div class="card-v2" data-product-id="{{ card_product.id }}">
+    {%- comment -%} Product Image {%- endcomment -%}
+    <div class="card-v2__media">
+      <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+        {%- if card_product.featured_media -%}
+          <div class="media" style="padding-bottom: {{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}%;">
+            <img
+              srcset="
+                {%- if card_product.featured_media.width >= 165 -%}{{ card_product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                {%- if card_product.featured_media.width >= 360 -%}{{ card_product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                {%- if card_product.featured_media.width >= 533 -%}{{ card_product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                {%- if card_product.featured_media.width >= 720 -%}{{ card_product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                {{ card_product.featured_media | image_url }} {{ card_product.featured_media.width }}w
+              "
+              src="{{ card_product.featured_media | image_url: width: 533 }}"
+              sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+              alt="{{ card_product.featured_media.alt | escape }}"
+              {% unless lazy_load == false %}loading="lazy"{% endunless %}
+              width="{{ card_product.featured_media.width }}"
+              height="{{ card_product.featured_media.height }}"
+            >
+          </div>
+        {%- else -%}
+          <div class="media" style="padding-bottom: 100%;">
+            {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {%- endif -%}
+      </a>
+    </div>
+
+    {%- comment -%} Card Content {%- endcomment -%}
+    <div class="card-v2__content">
+      {%- comment -%} Title {%- endcomment -%}
+      <h3 class="card-v2__title">
+        <a href="{{ card_product.url }}">{{ card_product.title | escape }}</a>
+      </h3>
+
+      {%- comment -%} Subtitle (variant info / metafield) {%- endcomment -%}
+      {%- if card_product.metafields.info.subtitle != blank -%}
+        <p class="card-v2__subtitle">{{ card_product.metafields.info.subtitle }}</p>
+      {%- elsif current_variant.title != 'Default Title' -%}
+        <p class="card-v2__subtitle">{{ current_variant.title }}</p>
+      {%- endif -%}
+
+      {%- comment -%} Star Rating {%- endcomment -%}
+      {%- if show_rating != false and card_product.metafields.reviews.rating.value != blank -%}
+        {%- liquid
+          assign rating_value = card_product.metafields.reviews.rating.value.rating
+          assign rating_max = card_product.metafields.reviews.rating.value.scale_max
+          assign rating_count = card_product.metafields.reviews.rating_count
+          assign full_stars = rating_value | floor
+          assign decimal = rating_value | modulo: 1
+          assign has_half = false
+          if decimal >= 0.3 and decimal <= 0.7
+            assign has_half = true
+          elsif decimal > 0.7
+            assign full_stars = full_stars | plus: 1
+          endif
+        -%}
+        <div class="card-v2__rating" role="img" aria-label="{{ rating_value }} out of {{ rating_max }} stars, {{ rating_count }} reviews">
+          <div class="card-v2__stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              {%- if i <= full_stars -%}
+                <span class="card-v2__star">
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/></svg>
+                </span>
+              {%- elsif has_half and i == full_stars | plus: 1 -%}
+                <span class="card-v2__star">
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="half-{{ card_id }}"><stop offset="50%" stop-color="#f5a623"/><stop offset="50%" stop-color="#d4d4d4"/></linearGradient></defs>
+                    <path fill="url(#half-{{ card_id }})" d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/>
+                  </svg>
+                </span>
+              {%- else -%}
+                <span class="card-v2__star card-v2__star--empty">
+                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/></svg>
+                </span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          <span class="card-v2__rating-count">
+            {{ rating_count }}
+            {%- if rating_count == 1 -%} Review{%- else -%} Reviews{%- endif -%}
+          </span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Product Description {%- endcomment -%}
+      {%- if show_description != false and card_product.description != blank -%}
+        <div class="card-v2__description">
+          {{ card_product.description | strip_html | truncate: 200 }}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Purchase Options & Add to Cart Form {%- endcomment -%}
+      <div class="card-v2__purchase-options">
+        <product-form data-section-id="{{ section_id }}">
+          {%- form 'product', card_product, id: product_form_id, class: 'card-v2__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+
+            {%- comment -%} Selling Plan Dropdown {%- endcomment -%}
+            {%- if show_subscription != false and card_product.selling_plan_groups.size > 0 -%}
+              <div class="card-v2__select-wrapper">
+                <select
+                  name="selling_plan"
+                  id="SellingPlan-{{ card_id }}"
+                  class="card-v2__select"
+                  data-selling-plan-select
+                >
+                  {%- for selling_plan_group in card_product.selling_plan_groups -%}
+                    {%- for selling_plan in selling_plan_group.selling_plans -%}
+                      <option value="{{ selling_plan.id }}">{{ selling_plan.name }}</option>
+                    {%- endfor -%}
+                  {%- endfor -%}
+                  {%- unless card_product.requires_selling_plan -%}
+                    <option value="">One time purchase</option>
+                  {%- endunless -%}
+                </select>
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Variant Picker {%- endcomment -%}
+            {%- if show_variant_picker != false and card_product.has_only_default_variant == false -%}
+              {%- if card_product.variants.size <= 5 -%}
+                {%- comment -%} Swatches for small number of variants {%- endcomment -%}
+                <div class="card-v2__variants" data-variant-swatches>
+                  {%- for variant in card_product.variants -%}
+                    <button
+                      type="button"
+                      class="card-v2__variant-swatch{% if variant == current_variant %} active{% endif %}"
+                      data-variant-id="{{ variant.id }}"
+                      data-variant-price="{{ variant.price }}"
+                      data-variant-available="{{ variant.available }}"
+                      {% unless variant.available %}disabled{% endunless %}
+                      aria-label="{{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}"
+                    >
+                      {{ variant.title }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+                <input type="hidden" name="id" value="{{ current_variant.id }}" class="card-v2__variant-input">
+              {%- else -%}
+                {%- comment -%} Dropdown for many variants {%- endcomment -%}
+                <div class="card-v2__select-wrapper">
+                  <select
+                    name="id"
+                    id="Variant-{{ card_id }}"
+                    class="card-v2__select"
+                  >
+                    {%- for variant in card_product.variants -%}
+                      <option
+                        value="{{ variant.id }}"
+                        data-variant-price="{{ variant.price }}"
+                        {% if variant == current_variant %}selected{% endif %}
+                        {% unless variant.available %}disabled{% endunless %}
+                      >
+                        {{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endif -%}
+            {%- else -%}
+              <input type="hidden" name="id" value="{{ current_variant.id }}" class="card-v2__variant-input">
+            {%- endif -%}
+
+            {%- comment -%} Add to Basket Button {%- endcomment -%}
+            <button
+              type="submit"
+              name="add"
+              class="card-v2__add-btn"
+              data-add-to-cart
+              data-product-price="{{ current_variant.price }}"
+              {% if current_variant.available == false %}disabled{% endif %}
+              aria-label="{{ 'products.product.add_to_cart' | t }} - {{ card_product.title | escape }}"
+            >
+              <span>
+                {%- if current_variant.available -%}
+                  Add to basket - {{ current_variant.price | money }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+              {%- render 'loading-spinner' -%}
+            </button>
+
+          {%- endform -%}
+        </product-form>
+      </div>
+    </div>
+  </div>
+
+{%- endif -%}

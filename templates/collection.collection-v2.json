@@ -18,17 +18,37 @@
       }
     },
     "product-grid": {
-      "type": "main-collection-product-grid",
+      "type": "collection-v2-product-grid",
+      "blocks": {
+        "richtext-1": {
+          "type": "richtext",
+          "settings": {
+            "text": "<p>Connective tissue like ligaments and tendons require elasticity and strength to perform their functions properly. TENDOFORTE\u00ae Bioactive Collagen Peptides\u00ae support these fibres and aid in their recovery, maintaining the flexibility and rigidity they need to perform and reduce the risk of injury.</p>"
+          }
+        },
+        "richtext-2": {
+          "type": "richtext",
+          "settings": {
+            "text": "<p>Connective tissue like ligaments and tendons require elasticity and strength to perform their functions properly. TENDOFORTE\u00ae Bioactive Collagen Peptides\u00ae support these fibres and aid in their recovery, maintaining the flexibility and rigidity they need to perform and reduce the risk of injury.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "richtext-1",
+        "richtext-2"
+      ],
       "settings": {
         "products_per_page": 16,
         "columns_desktop": 4,
-        "image_ratio": "adapt",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_filtering": true,
-        "enable_sorting": true,
         "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "show_rating": true,
+        "show_description": true,
+        "show_subscription": true,
+        "show_variant_picker": true,
+        "enable_filtering": true,
+        "filter_type": "horizontal",
+        "enable_sorting": true,
         "padding_top": 36,
         "padding_bottom": 36
       }
