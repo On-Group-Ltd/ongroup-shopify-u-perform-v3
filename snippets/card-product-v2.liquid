@@ -79,6 +79,7 @@
           elsif decimal > 0.7
             assign full_stars = full_stars | plus: 1
           endif
+          assign half_star_index = full_stars | plus: 1
         -%}
         <div class="card-v2__rating" role="img" aria-label="{{ rating_value }} out of {{ rating_max }} stars, {{ rating_count }} reviews">
           <div class="card-v2__stars" aria-hidden="true">
@@ -87,7 +88,7 @@
                 <span class="card-v2__star">
                   <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/></svg>
                 </span>
-              {%- elsif has_half and i == full_stars | plus: 1 -%}
+              {%- elsif has_half and i == half_star_index -%}
                 <span class="card-v2__star">
                   <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <defs><linearGradient id="half-{{ card_id }}"><stop offset="50%" stop-color="#f5a623"/><stop offset="50%" stop-color="#d4d4d4"/></linearGradient></defs>
