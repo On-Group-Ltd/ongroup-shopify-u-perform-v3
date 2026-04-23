@@ -67,45 +67,40 @@
 
       {%- comment -%} Star Rating {%- endcomment -%}
       {%- if show_rating != false and card_product.metafields.reviews.rating.value != blank -%}
-        {%- liquid
-          assign rating_value = card_product.metafields.reviews.rating.value.rating
-          assign rating_max = card_product.metafields.reviews.rating.value.scale_max
-          assign rating_count = card_product.metafields.reviews.rating_count
-          assign full_stars = rating_value | floor
-          assign decimal = rating_value | modulo: 1
-          assign has_half = false
-          if decimal >= 0.3 and decimal <= 0.7
-            assign has_half = true
-          elsif decimal > 0.7
-            assign full_stars = full_stars | plus: 1
-          endif
-          assign half_star_index = full_stars | plus: 1
-        -%}
-        <div class="card-v2__rating" role="img" aria-label="{{ rating_value }} out of {{ rating_max }} stars, {{ rating_count }} reviews">
-          <div class="card-v2__stars" aria-hidden="true">
-            {%- for i in (1..5) -%}
-              {%- if i <= full_stars -%}
-                <span class="card-v2__star">
-                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/></svg>
-                </span>
-              {%- elsif has_half and i == half_star_index -%}
-                <span class="card-v2__star">
-                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <defs><linearGradient id="half-{{ card_id }}"><stop offset="50%" stop-color="#f5a623"/><stop offset="50%" stop-color="#d4d4d4"/></linearGradient></defs>
-                    <path fill="url(#half-{{ card_id }})" d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/>
-                  </svg>
-                </span>
-              {%- else -%}
-                <span class="card-v2__star card-v2__star--empty">
-                  <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 1l2.39 6.24H19l-5.3 4.13L15.78 18 10 13.87 4.22 18l2.08-6.63L1 7.24h6.61z"/></svg>
-                </span>
-              {%- endif -%}
-            {%- endfor -%}
+        <div class="rating-wrapper">
+          {% liquid
+            assign rating_decimal = 0
+            assign decimal = card_product.metafields.reviews.rating.value.rating | modulo: 1
+            if decimal >= 0.3 and decimal <= 0.7
+              assign rating_decimal = 0.5
+            elsif decimal > 0.7
+              assign rating_decimal = 1
+            endif
+          %}
+          <div
+            class="rating"
+            role="img"
+            aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: card_product.metafields.reviews.rating.value, rating_max: card_product.metafields.reviews.rating.value.scale_max }}"
+          >
+            <span
+              aria-hidden="true"
+              class="rating-star"
+              style="--rating: {{ card_product.metafields.reviews.rating.value.rating | floor }}; --rating-max: {{ card_product.metafields.reviews.rating.value.scale_max }}; --rating-decimal: {{ rating_decimal }};"
+            ></span>
           </div>
-          <span class="card-v2__rating-count">
-            {{ rating_count }}
-            {%- if rating_count == 1 -%} Review{%- else -%} Reviews{%- endif -%}
-          </span>
+          <p class="rating-text caption">
+            <span aria-hidden="true">
+              {{- card_product.metafields.reviews.rating.value }} /
+              {{ card_product.metafields.reviews.rating.value.scale_max -}}
+            </span>
+          </p>
+          <p class="rating-count caption">
+            <span aria-hidden="true">({{ card_product.metafields.reviews.rating_count }})</span>
+            <span class="visually-hidden">
+              {{- card_product.metafields.reviews.rating_count }}
+              {{ 'accessibility.total_reviews' | t -}}
+            </span>
+          </p>
         </div>
       {%- endif -%}
 
@@ -123,6 +118,7 @@
 
             {%- comment -%} Variant Picker (Flavour) {%- endcomment -%}
             {%- if show_variant_picker != false and card_product.has_only_default_variant == false -%}
+              <span class="card-v2__variant-label">Flavour</span>
               {%- if card_product.variants.size <= 5 -%}
                 {%- comment -%} Swatches for small number of variants {%- endcomment -%}
                 <div class="card-v2__variants" data-variant-swatches>
