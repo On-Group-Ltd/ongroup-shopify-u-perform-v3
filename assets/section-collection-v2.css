@@ -8,14 +8,15 @@
   flex-direction: column;
   height: 100%;
   background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 4px;
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card-v2:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 /* Card Image */
@@ -72,39 +73,14 @@
 }
 
 /* Rating */
-.card-v2__rating {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+.card-v2__content .rating-wrapper {
   margin-bottom: 0.8rem;
-  flex-wrap: wrap;
 }
 
-.card-v2__stars {
-  display: flex;
-  align-items: center;
-  gap: 1px;
-}
-
-.card-v2__star {
-  width: 14px;
-  height: 14px;
-  color: #f5a623;
-}
-
-.card-v2__star--empty {
-  color: #d4d4d4;
-}
-
-.card-v2__star svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
-}
-
-.card-v2__rating-count {
-  font-size: 1.1rem;
-  color: rgba(var(--color-foreground), 0.5);
+.card-v2 .rating-star {
+  --letter-spacing: 0.2;
+  --font-size: 1.4;
+  --color-rating-star: #b09d5f;
 }
 
 /* Description */
@@ -124,11 +100,26 @@
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1.2rem;
+}
+
+.card-v2__variant-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground), 0.7);
+  margin-bottom: 0.6rem;
 }
 
 .card-v2__select-wrapper {
   position: relative;
+  margin-bottom: 1rem;
+}
+
+.card-v2__select-wrapper:last-of-type {
+  margin-bottom: 0;
 }
 
 .card-v2__select {
@@ -169,7 +160,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 1rem;
 }
 
 .card-v2__variant-swatch {
@@ -201,20 +192,20 @@
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  border: 1px solid rgb(var(--color-foreground));
+  border: 1px solid #000;
   border-radius: 4px;
-  background: rgb(var(--color-background));
-  color: rgb(var(--color-foreground));
+  background: #000;
+  color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   line-height: 1.4;
-  margin-top: 0.2rem;
+  margin-top: 0.6rem;
 }
 
 .card-v2__add-btn:hover {
-  background: rgb(var(--color-foreground));
-  color: rgb(var(--color-background));
+  background: #fff;
+  color: #000;
 }
 
 .card-v2__add-btn:disabled {
