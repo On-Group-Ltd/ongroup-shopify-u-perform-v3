@@ -11,6 +11,9 @@
   "sections": {
     "banner": {
       "type": "main-collection-banner",
+      "custom_css": [
+        "h1 {font-size: 7.2rem; font-weight: 400; margin: 0 0 5rem; line-height: 1.2; font-family: georgiapro, sans-serif; color: #000; text-align: center;}"
+      ],
       "settings": {
         "show_collection_description": true,
         "show_collection_image": false,
