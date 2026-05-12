@@ -24,9 +24,9 @@
   <div class="card-v2" data-product-id="{{ card_product.id }}">
     {%- comment -%} Product Image {%- endcomment -%}
     <div class="card-v2__media">
-      <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
-        {%- if card_product.featured_media -%}
-          <div class="media" style="padding-bottom: {{ 1 | divided_by: card_product.featured_media.aspect_ratio | times: 100 }}%;">
+      {%- if card_product.featured_media -%}
+        <div class="media" style="aspect-ratio: {{ card_product.featured_media.aspect_ratio }};">
+          <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
             <img
               srcset="
                 {%- if card_product.featured_media.width >= 165 -%}{{ card_product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
@@ -42,13 +42,23 @@
               width="{{ card_product.featured_media.width }}"
               height="{{ card_product.featured_media.height }}"
             >
-          </div>
-        {%- else -%}
-          <div class="media" style="padding-bottom: 100%;">
+          </a>
+        </div>
+      {%- else -%}
+        <div class="media" style="aspect-ratio: 1 / 1;">
+          <a href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
             {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
-          </div>
-        {%- endif -%}
-      </a>
+          </a>
+        </div>
+      {%- endif -%}
+      <img
+        src="{{ 'informed-sport-logo.png' | asset_url }}"
+        alt="Informed Sport"
+        class="card-v2__badge"
+        width="30"
+        height="30"
+        loading="lazy"
+      >
     </div>
 
     {%- comment -%} Card Content {%- endcomment -%}
