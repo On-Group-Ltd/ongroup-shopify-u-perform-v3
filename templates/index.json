@@ -186,7 +186,7 @@
           "type": "athlete",
           "settings": {
             "image": "shopify://shop_images/Backed-by-Athletes-holding-image.jpg",
-            "name": "Athlete Name"
+            "name": "Dame Sarah Storey"
           }
         },
         "athlete_zk4LzX": {
@@ -229,7 +229,7 @@
       "settings": {
         "title": "Backed by Athletes. Built for You.",
         "description": "At U Perform, we believe in the power of people pushing their limits. Our athletes and ambassadors train, compete, and recover with U Perform, trusting us to help them stay stronger, perform longer, and go the distance.",
-        "button_text": "Team U Perform",
+        "button_text": "Meet team - U Perform",
         "button_link": "shopify://pages/the-u-perform-family",
         "padding_top": 60,
         "padding_bottom": 60
