@@ -272,8 +272,8 @@
       "name": "Athlete Profile",
       "settings": {
         "profile_image": "shopify://shop_images/Greg-whyte-profile-image.jpg",
-        "title": "Professor Greg Whyte OBE<span>.</span>",
-        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptate</p>",
+        "title": "Professor Greg Whyte OBE",
+        "description": "<p>Former Olympian, world renowned sport scientist and Physical Activity Expert. Greg is the preeminent authority on Exercise Physiology and Sports and Exercise Performance in the UK.</p><p>Greg is currently a Professor of Applied Sport and Exercise Science at Liverpool John Moore’s University and Director of Performance at the Centre for Health and Human Performance in Harley Street, London.</p><p>Greg's former roles include Director of Research for the British Olympic Association and Director of Science & Research for the English Institute of Sport. Greg brings this wealth of knowledge and experience to the U Perform team.</p><p></p>",
         "background_color": "#000000",
         "padding_top": 80,
         "padding_bottom": 80
