@@ -182,13 +182,6 @@
     "section_athletes_slider_bpy79a": {
       "type": "section-athletes-slider",
       "blocks": {
-        "athlete_8bEq9F": {
-          "type": "athlete",
-          "settings": {
-            "image": "shopify://shop_images/U-Perform_IG_2025_Jan_to_June_a0f54a52-68f1-4cf5-810f-73f7e0d53661.png",
-            "name": "Ramiro Mora <br> Olympic Weightlifter"
-          }
-        },
         "athlete_DhEUgn": {
           "type": "athlete",
           "settings": {
@@ -230,16 +223,23 @@
             "image": "shopify://shop_images/100_3b6195ac-60eb-4553-a2f9-385645aaddac.png",
             "name": "Alastair Chalmers <br> Olympian and 5 x 400mh British Champion"
           }
+        },
+        "athlete_8bEq9F": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/U-Perform_IG_2025_Jan_to_June_a0f54a52-68f1-4cf5-810f-73f7e0d53661.png",
+            "name": "Ramiro Mora <br> Olympic Weightlifter"
+          }
         }
       },
       "block_order": [
-        "athlete_8bEq9F",
         "athlete_DhEUgn",
         "athlete_zk4LzX",
         "athlete_RR7btx",
         "athlete_Lapew6",
         "athlete_CYXgRq",
-        "athlete_zYWKF3"
+        "athlete_zYWKF3",
+        "athlete_8bEq9F"
       ],
       "name": "Athletes Slider",
       "settings": {
