@@ -214,7 +214,14 @@
           "type": "athlete",
           "settings": {
             "image": "shopify://shop_images/U-Perform_IG_2025_Jan_to_June-3_4c9cf1fb-808a-4f1c-9d85-08afd400fd6c.png",
-            "name": "Becky Downie MBE <br> GB Gymnast"
+            "name": "Becky Downie MBE  GB Gymnast"
+          }
+        },
+        "athlete_zYWKF3": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/100_3b6195ac-60eb-4553-a2f9-385645aaddac.png",
+            "name": "Alastair Chalmers <br> Olympian and 5 x 400mh British Champion"
           }
         }
       },
@@ -223,7 +230,8 @@
         "athlete_zk4LzX",
         "athlete_RR7btx",
         "athlete_Lapew6",
-        "athlete_CYXgRq"
+        "athlete_CYXgRq",
+        "athlete_zYWKF3"
       ],
       "name": "Athletes Slider",
       "settings": {
