@@ -182,6 +182,13 @@
     "section_athletes_slider_bpy79a": {
       "type": "section-athletes-slider",
       "blocks": {
+        "athlete_8bEq9F": {
+          "type": "athlete",
+          "settings": {
+            "image": "shopify://shop_images/U-Perform_IG_2025_Jan_to_June_a0f54a52-68f1-4cf5-810f-73f7e0d53661.png",
+            "name": "Ramiro Mora <br> Olympic Weightlifter"
+          }
+        },
         "athlete_DhEUgn": {
           "type": "athlete",
           "settings": {
@@ -226,6 +233,7 @@
         }
       },
       "block_order": [
+        "athlete_8bEq9F",
         "athlete_DhEUgn",
         "athlete_zk4LzX",
         "athlete_RR7btx",
