@@ -134,7 +134,7 @@
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>✔ UK's No.1 Sports Collagen for Performance and Recovery</p><p>✔ Reduce the risk of injury</p><p>✔ Optimise the recovery from injury</p><p>✔ Train harder & recover faster</p><p><br/></p><p>Take <strong>1 gel daily</strong> for <strong>injury prevention</strong></p><p>Take <strong>2 gels daily</strong> for <strong>injury rehabilitation</strong></p>",
+            "text": "<h3><strong>Active Collagen is formulated with 2 Unique Bioactive Collagen Peptides® to support your ligaments, tendons, muscles, and joints. </strong></h3><p>✔ UK's No.1 Sports Collagen for Performance and Recovery<br/>✔ Reduce the risk of injury<br/>✔ Optimise the recovery from injury<br/>✔ Train harder & recover faster</p>",
             "link_label": "",
             "link": ""
           }
@@ -143,7 +143,7 @@
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<h4><strong>Added Vitamins & Minerals</strong></h4><p>Including Vitamins C, E, B6 and Zinc, Copper, and Biotin to support normal immune function, energy levels, and connective tissue function.</p>",
+            "text": "<h3><strong>Take Anytime…Anywhere</strong></h3><p>Whenever you are training, Active Collagen is an excellent post-workout recovery supplement. In handy 30ml sachets, Active Collagen can also be taken at any other time in the day to suit your active lifestyle and even added into other drinks, foods and smoothies to supercharge your recovery routine.</p>",
             "link_label": "",
             "link": ""
           }
@@ -152,7 +152,7 @@
           "type": "column",
           "settings": {
             "title": "",
-            "text": "<p>Active Collagen contains two clinically proven Bioactive Collagen Peptides®, which, along with the additional vitamins and minerals, contribute to the maintenance of ligaments & tendons, soft tissue repair, and protein synthesis.</p>",
+            "text": "<h3><strong>For Repair and Recovery</strong></h3><p>Ideal for anyone looking to add a high-quality collagen protein to support daily recovery from exercise and injury prehab and rehab too.</p><p>Take <strong>1 gel daily</strong> for <strong>injury prevention</strong></p><p>Take <strong>2 gels daily</strong> for <strong>injury rehabilitation </strong></p>",
             "link_label": "",
             "link": ""
           }
@@ -170,7 +170,7 @@
         ".multicolumn .inline-richtext span {color: #857550;}"
       ],
       "settings": {
-        "title": "UK’s No.1 Sports Recovery Collagen<span>.</span>",
+        "title": "UK’s No.1 Sports Recovery Collagen.",
         "heading_size": "h1",
         "image_width": "full",
         "image_ratio": "adapt",
